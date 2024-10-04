@@ -43,6 +43,7 @@ void ATestingActor::Handle_ColliderHit(UPrimitiveComponent* HitComponent, AActor
 	UE_LOG(LogTemp, Display, TEXT("======================================") );
 	//UGameplayStatics::ApplyDamage(this, 10.0f, nullptr, nullptr, nullptr);
 	//Apply damage
+	//UGameplayStatics::ApplyDamage(this, 10.0f, nullptr, this, nullptr);
 }
 
 // Called every frame
