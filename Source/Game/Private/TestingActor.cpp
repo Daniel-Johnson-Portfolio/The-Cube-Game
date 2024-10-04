@@ -5,6 +5,7 @@
 
 #include "MovieSceneObjectBindingID.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Preferences/PersonaOptions.h"
 
 
@@ -40,6 +41,8 @@ void ATestingActor::Handle_ColliderHit(UPrimitiveComponent* HitComponent, AActor
 	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	UE_LOG(LogTemp, Display, TEXT("======================================") );
+	//UGameplayStatics::ApplyDamage(this, 10.0f, nullptr, nullptr, nullptr);
+	//Apply damage
 }
 
 // Called every frame

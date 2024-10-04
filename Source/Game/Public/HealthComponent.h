@@ -17,11 +17,20 @@ public:
 	UHealthComponent();
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float _MaxHealth;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float _CurrentHealth;
+
+private:
+	UFUNCTION()
+	void DamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser );
+	//Gets the 5 params
+	
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+
 };
