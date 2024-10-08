@@ -19,7 +19,7 @@ class GAME_API ATestingActor : public AActor, public  IMyInterface
 public:
 	// Sets default values for this actor's properties
 	ATestingActor();
-	virtual void Input_Look_Implementation() override;
+	//virtual void Input_Look_Implementation() override;
 	
 protected:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)

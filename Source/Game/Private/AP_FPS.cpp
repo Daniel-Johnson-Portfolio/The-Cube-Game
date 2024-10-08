@@ -8,7 +8,7 @@
 
 UInputMappingContext* AAP_FPS::GetMappingContext_Implementation()
 {
-	return IMyInterface::GetMappingContext_Implementation();
+	return _InputMapping;
 }
 
 void AAP_FPS::Input_FirePressed_Implementation()
@@ -39,7 +39,8 @@ void AAP_FPS::Input_Look_Implementation(FVector2D Value)
 
 void AAP_FPS::Input_Move_Implementation(FVector2D Value)
 {
-	AddMovementInput(FVector::VectorPlaneProject(_Camera->GetForwardVector(), FVector::UpVector));
+	AddMovementInput(FVector::VectorPlaneProject(_Camera->GetForwardVector(), FVector::UpVector).GetSafeNormal(), Value.Y);
+	AddMovementInput(GetActorRightVector(), Value.X);
 }
 
 // Sets default values
