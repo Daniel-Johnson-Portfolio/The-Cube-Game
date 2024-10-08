@@ -5,6 +5,8 @@
 #include "EnhancedInputComponent.h"
 #include "MyInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "EnhancedInputSubsystems.h"
+
 void APC_FPS::SetupInputComponent()
 {
 	Super::SetupInputComponent();

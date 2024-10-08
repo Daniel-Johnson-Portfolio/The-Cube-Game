@@ -7,6 +7,9 @@
 #include "GameFramework/Character.h"
 #include "AP_FPS.generated.h"
 
+class UHealthComponent;
+class UCameraComponent;
+
 UCLASS(Abstract)
 class GAME_API AAP_FPS : public ACharacter, public IMyInterface
 {
