@@ -3,6 +3,7 @@
 
 #include "PC_Testing.h"
 #include "EnhancedInputComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void APC_Testing::SetupInputComponent()
@@ -20,7 +21,11 @@ void APC_Testing::SetupInputComponent()
 void APC_Testing::Debug(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Display, TEXT("DEBUG WORKS:::::::::::::::::::::::::::::::::::::::::::::::::::"));
-	//if(AActor* )
+	//if(AActor* Testing - UGameplayStatics::GetActorOfClass(GetWorld(), AFirstActor::StaticClass()))
+	//{
+
+		
+	//}
 
 	
 }
