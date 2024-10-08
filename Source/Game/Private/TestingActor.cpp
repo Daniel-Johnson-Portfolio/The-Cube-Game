@@ -30,6 +30,11 @@ ATestingActor::ATestingActor()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void ATestingActor::Interact_Implementation()
+{
+	UE_LOG(LogTemp, Display, TEXT("Interfaced"));
+}
+
 // Called when the game starts or when spawned
 void ATestingActor::BeginPlay()
 {

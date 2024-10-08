@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyInterface.h"
 
 #include "GameFramework/Actor.h"
 #include "Components/ArrowComponent.h"
@@ -11,14 +12,15 @@
 class UBoxComponent;
 
 UCLASS(Abstract)
-class GAME_API ATestingActor : public AActor
+class GAME_API ATestingActor : public AActor, public  IMyInterface
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
 	ATestingActor();
-
+	virtual void Interact_Implementation() override;
+	
 protected:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	//TObjectPtr<USceneComponent> _Root;
@@ -39,4 +41,5 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
 };

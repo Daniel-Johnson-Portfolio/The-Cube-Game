@@ -20,7 +20,7 @@ void APC_Testing::SetupInputComponent()
 void APC_Testing::Debug(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Display, TEXT("DEBUG WORKS:::::::::::::::::::::::::::::::::::::::::::::::::::"));
-
+	//if(AActor* )
 
 	
 }
