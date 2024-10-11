@@ -32,6 +32,10 @@ protected:
 	
 private:
 	GENERATED_BODY()
+	UFUNCTION()
+	void Handle_HealthDead(AController * causer);
+	UFUNCTION()
+	void Handle_HealthDamaged(float current, float max, float change);
 
 public:
 	// Sets default values for this character's properties

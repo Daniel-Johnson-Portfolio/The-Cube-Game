@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿ // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -6,6 +6,7 @@
 #include "GameFramework/GameMode.h"
 #include "MyGameMode.generated.h"
 
+ class UGameRule;
 /**
  * 
  */
@@ -21,6 +22,25 @@ public:
 	virtual void Logout(AController* Exiting) override;
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Match Management")
+	int _CountdownTimer;
+	FTimerHandle _TimerDecreaseCountdown;
+	UPROPERTY(EditAnywhere, Category="Match Management")
+	TSubclassOf<APawn> _MatchPawn;
+ 
+	UFUNCTION()
+	void DecreaseCountdown();
+	
+	int _GameRulesLeft;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<TObjectPtr<UGameRule>> _GameRuleManagers;
+
+	UFUNCTION()
+	void HandleGameRuleCompleted();
+	UFUNCTION()
+	void Handle_GameRulePointsScored(AController* scorer, int points);
+
+	
 	TArray<TObjectPtr<AActor>> _PlayerStarts;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

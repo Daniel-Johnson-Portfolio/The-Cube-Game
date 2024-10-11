@@ -2,6 +2,8 @@
 
 
 #include "MyGameMode.h"
+
+#include "GameRule.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -37,7 +39,23 @@ void AMyGameMode::Logout(AController* Exiting)
 
 void AMyGameMode::HandleMatchIsWaitingToStart()
 {
-	StartMatch();
+	TArray<UActorComponent*> outComponents;
+	GetComponents(outComponents);
+	for(UActorComponent* comp : outComponents)
+	{
+		if(UGameRule* rule = Cast<UGameRule>(comp))
+		{
+			_GameRuleManagers.Add(rule);
+			rule->Init();
+			rule->OnComplete.AddUniqueDynamic(this, &AMyGameMode::HandleGameRuleCompleted);
+			rule->OnPointScored.AddUniqueDynamic(this, &AMyGameMode::Handle_GameRulePointsScored);
+			_GameRulesLeft++;
+			
+		}
+		
+
+		
+	}
 	Super::HandleMatchIsWaitingToStart();
 }
 
