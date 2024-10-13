@@ -37,6 +37,28 @@ void AMyGameMode::Logout(AController* Exiting)
 	Super::Logout(Exiting);
 }
 
+void AMyGameMode::DecreaseCountdown()
+{
+	_CountdownTimer--;
+	UE_LOG(LogTemp, Display, TEXT("GAMEMODE Countdown: %d"), _CountdownTimer);
+	if(_CountdownTimer == 0)
+	{
+		StartMatch();
+	}
+	else
+	{
+		GetWorld()->GetTimerManager().SetTimer(_TimerDecreaseCountdown, this, &AMyGameMode::DecreaseCountdown, 1.f, false);
+	}
+}
+
+void AMyGameMode::HandleGameRuleCompleted()
+{
+}
+
+void AMyGameMode::Handle_GameRulePointsScored(AController* scorer, int points)
+{
+}
+
 void AMyGameMode::HandleMatchIsWaitingToStart()
 {
 	TArray<UActorComponent*> outComponents;
@@ -53,7 +75,8 @@ void AMyGameMode::HandleMatchIsWaitingToStart()
 			
 		}
 		
-
+		GetWorld()->GetTimerManager().SetTimer(_TimerDecreaseCountdown, this, &AMyGameMode::DecreaseCountdown, 1.f, false);
+		Super::HandleMatchIsWaitingToStart();
 		
 	}
 	Super::HandleMatchIsWaitingToStart();
@@ -61,6 +84,11 @@ void AMyGameMode::HandleMatchIsWaitingToStart()
 
 void AMyGameMode::HandleMatchHasStarted()
 {
+	DefaultPawnClass = _MatchPawn;
+	for(AController* controller : _PlayerControllers)
+	{
+		RestartPlayer(controller);
+	}
 	Super::HandleMatchHasStarted();
 }
 

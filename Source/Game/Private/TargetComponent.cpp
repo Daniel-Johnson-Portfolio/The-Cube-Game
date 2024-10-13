@@ -30,7 +30,7 @@ void UTargetComponent::BeginPlay()
 		_Health = NewObject<UHealthComponent>(owner, TEXT("Health")); //creates health component if it doesnt exist
 		owner->AddInstanceComponent(_Health);
 		_Health->RegisterComponent();
-		owner-Modify();
+		owner->Modify();
 	}
 
 	_Health->OnDead.AddUniqueDynamic(this, &UTargetComponent::Handle_HealthDead); //Binds Handle dead to on death

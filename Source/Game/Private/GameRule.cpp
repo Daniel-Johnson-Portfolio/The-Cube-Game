@@ -15,6 +15,7 @@ UGameRule::UGameRule()
 }
 
 
+
 // Called when the game starts
 void UGameRule::BeginPlay()
 {
@@ -22,6 +23,11 @@ void UGameRule::BeginPlay()
 
 	// ...
 	
+}
+
+
+void UGameRule::Init()
+{
 }
 
 void UGameRule::BroadcastComplete()
