@@ -33,6 +33,7 @@ void AAP_FPS::Input_JumpReleased_Implementation()
 
 void AAP_FPS::Input_Look_Implementation(FVector2D Value)
 {
+	UE_LOG(LogTemp, Display, TEXT("X: %f Y: %f"), Value.X, Value.Y);
 	AddActorWorldRotation(FRotator(0.0f, Value.X, 0.0f));
 	_Camera->AddLocalRotation(FRotator(Value.Y, 0.0f, 0.0f));
 }

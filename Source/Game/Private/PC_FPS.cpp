@@ -97,13 +97,13 @@ void APC_FPS::FireReleased()
 void APC_FPS::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-
+	
 	if(UEnhancedInputLocalPlayerSubsystem* Subsytem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		if(UKismetSystemLibrary::DoesImplementInterface(InPawn, UMyInterface::StaticClass()))
 		{
 			Subsytem->AddMappingContext(IMyInterface::Execute_GetMappingContext(InPawn),0);
-			
+			UE_LOG(LogTemp, Display, TEXT("HFUEHFEHUFRrt"));
 		}
 
 		
