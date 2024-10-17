@@ -1,11 +1,13 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "MyInterface.h"
 #include "GameFramework/Character.h"
+#include "Weapon_Base.h"
 #include "AP_FPS.generated.h"
+
 
 class UHealthComponent;
 class UCameraComponent;
@@ -22,6 +24,15 @@ public:
 	virtual void Input_Look_Implementation(FVector2D Value) override;
 	virtual void Input_Move_Implementation(FVector2D Value) override;
 protected:
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<USceneComponent> _WeaponAttachPoint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AWeapon_Base> _DefaultWeapon;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<AWeapon_Base> _WeaponRef;
+
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UCameraComponent> _Camera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

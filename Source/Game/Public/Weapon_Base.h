@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
 #include "Weapon_Base.generated.h"
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWeaponFireSignature);
@@ -16,11 +17,30 @@ public:
 	// Sets default values for this actor's properties
 	AWeapon_Base();
 
+	UPROPERTY(BlueprintAssignable)
+	FWeaponFireSignature OnFire;
+    
+	void StartFire();
+	void StopFire();
+    
+
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<USceneComponent> _Root;
+ 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<USkeletalMeshComponent> _Mesh;
+    
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UArrowComponent> _Muzzle;
+ 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float _FireDelay;
+	FTimerHandle _FireDelayTimer;
+ 
+	UFUNCTION()
+	virtual void Fire();
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 };

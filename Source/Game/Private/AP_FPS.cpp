@@ -13,12 +13,18 @@ UInputMappingContext* AAP_FPS::GetMappingContext_Implementation()
 
 void AAP_FPS::Input_FirePressed_Implementation()
 {
-	//
+	if(_WeaponRef)
+	{
+		_WeaponRef->StartFire();
+	}
 }
 
 void AAP_FPS::Input_FireReleased_Implementation()
 {
-	//
+	if(_WeaponRef)
+	{
+		_WeaponRef->StopFire();
+	}
 }
 
 void AAP_FPS::Input_JumpPressed_Implementation()
@@ -63,6 +69,8 @@ AAP_FPS::AAP_FPS()
 	_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	_Camera->SetupAttachment(RootComponent);
 	_Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
+	_WeaponAttachPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Attach"));
+	_WeaponAttachPoint->SetupAttachment(_Camera);
 }
 
 // Called when the game starts or when spawned
@@ -72,6 +80,14 @@ void AAP_FPS::BeginPlay()
 
 	_Health->OnDamaged.AddUniqueDynamic(this, &AAP_FPS::Handle_HealthDamaged);
 	_Health->OnDead.AddUniqueDynamic(this, &AAP_FPS::Handle_HealthDead);
+	if(_DefaultWeapon)
+	{
+		FActorSpawnParameters spawnParams;
+		spawnParams.Owner = this;
+		spawnParams.Instigator = this;
+		_WeaponRef = GetWorld()->SpawnActor<AWeapon_Base>(_DefaultWeapon, _WeaponAttachPoint->GetComponentTransform(), spawnParams);
+		_WeaponRef->AttachToComponent(_WeaponAttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	}
 }
 
 // Called every frame
