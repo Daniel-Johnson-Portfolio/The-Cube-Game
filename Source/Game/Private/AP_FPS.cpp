@@ -4,6 +4,8 @@
 #include "AP_FPS.h"
 
 #include "HealthComponent.h"
+#include "PC_FPS.h"
+#include "Widget_Hud.h"
 #include "Camera/CameraComponent.h"
 
 UInputMappingContext* AAP_FPS::GetMappingContext_Implementation()
@@ -50,6 +52,12 @@ void AAP_FPS::Input_Move_Implementation(FVector2D Value)
 	AddMovementInput(GetActorRightVector(), Value.X);
 }
 
+void AAP_FPS::PossessedBy(AController* NewController)
+{
+	_PlayerController = Cast<APC_FPS, AController>(NewController);
+	Super::PossessedBy(NewController);
+	
+}
 void AAP_FPS::Handle_HealthDead(AController* causer)
 {
 	
@@ -57,7 +65,7 @@ void AAP_FPS::Handle_HealthDead(AController* causer)
 
 void AAP_FPS::Handle_HealthDamaged(float current, float max, float change)
 {
-	
+	OnDamaged.Broadcast(change);
 }
 
 // Sets default values
@@ -77,7 +85,7 @@ AAP_FPS::AAP_FPS()
 void AAP_FPS::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	_Health->OnDamaged.AddUniqueDynamic(this, &AAP_FPS::Handle_HealthDamaged);
 	_Health->OnDead.AddUniqueDynamic(this, &AAP_FPS::Handle_HealthDead);
 	if(_DefaultWeapon)

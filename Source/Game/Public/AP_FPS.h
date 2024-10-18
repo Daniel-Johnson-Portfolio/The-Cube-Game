@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "MyInterface.h"
+#include "PC_FPS.h"
 #include "GameFramework/Character.h"
 #include "Weapon_Base.h"
 #include "AP_FPS.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPawnDamagedSignature, float, Damage);
 
 
 class UHealthComponent;
@@ -23,7 +26,13 @@ public:
 	virtual void Input_JumpReleased_Implementation() override;
 	virtual void Input_Look_Implementation(FVector2D Value) override;
 	virtual void Input_Move_Implementation(FVector2D Value) override;
+	virtual void PossessedBy(AController* NewController) override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<APC_FPS> _PlayerController;
+	UPROPERTY(BlueprintAssignable)
+	FOnPawnDamagedSignature OnDamaged;
 protected:
+
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<USceneComponent> _WeaponAttachPoint;
@@ -40,6 +49,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UInputMappingContext> _InputMapping;
+
+	
 	
 private:
 	GENERATED_BODY()

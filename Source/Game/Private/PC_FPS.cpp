@@ -2,10 +2,16 @@
 
 
 #include "PC_FPS.h"
+
+#include "AP_FPS.h"
 #include "EnhancedInputComponent.h"
 #include "MyInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "EnhancedInputSubsystems.h"
+#include "Widget_Hud.h"
+#include "Blueprint/UserWidget.h"
+
+
 
 void APC_FPS::SetupInputComponent()
 {
@@ -18,8 +24,6 @@ void APC_FPS::SetupInputComponent()
 		EIP->BindAction(_JumpAction, ETriggerEvent::Completed, this, &APC_FPS::JumpReleased);
 		EIP->BindAction(_FireAction, ETriggerEvent::Triggered, this, &APC_FPS::FirePressed);
 		EIP->BindAction(_FireAction, ETriggerEvent::Completed, this, &APC_FPS::FireReleased);
-
-		
 	}
 }
 
@@ -97,16 +101,38 @@ void APC_FPS::FireReleased()
 void APC_FPS::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	
+	_Pawn = InPawn;
 	if(UEnhancedInputLocalPlayerSubsystem* Subsytem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		if(UKismetSystemLibrary::DoesImplementInterface(InPawn, UMyInterface::StaticClass()))
 		{
 			Subsytem->AddMappingContext(IMyInterface::Execute_GetMappingContext(InPawn),0);
-			UE_LOG(LogTemp, Display, TEXT("HFUEHFEHUFRrt"));
+			
 		}
 
 		
 	}
 	
 }
+
+void APC_FPS::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if(_HUDWidgetClass)
+	{	
+		_HUDWidget = CreateWidget<UWidget_Hud, APC_FPS*>(this, _HUDWidgetClass.Get());
+		_HUDWidget->AddToViewport();
+		
+	}
+	_Pawn->OnDamaged.AddUniqueDynamic(this, &APC_FPS::UpdateHealth);
+	
+}
+void APC_FPS::UpdateHealth(float Change)
+{
+	
+	UE_LOG(LogTemp, Display, TEXT("PC has recived"));
+	_HUDWidget->UpdateHealth(Change);
+}
+
+

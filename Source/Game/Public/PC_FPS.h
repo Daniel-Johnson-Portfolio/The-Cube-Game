@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "PC_FPS.generated.h"
 
+class UWidget_Hud;
 struct FInputActionValue;
 class UInputAction;
 /**
@@ -16,6 +17,11 @@ class GAME_API APC_FPS : public APlayerController
 {
 	GENERATED_BODY()
 
+public:
+	void UpdateHealth(float Change);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<APawn> _Pawn;
+	
 protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> _LookAction;
@@ -26,6 +32,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> _FireAction;
 
+	
 	virtual void SetupInputComponent() override;
 
 	void Look(const FInputActionValue& Value);
@@ -37,5 +44,12 @@ protected:
 
 	virtual void OnPossess(APawn* InPawn) override;
 
+protected:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UWidget_Hud> _HUDWidgetClass;
+	TObjectPtr<UWidget_Hud> _HUDWidget;
+
+	virtual void BeginPlay() override;
+	
 	
 };
