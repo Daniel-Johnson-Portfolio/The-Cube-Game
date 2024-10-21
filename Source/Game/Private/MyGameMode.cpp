@@ -2,8 +2,8 @@
 
 
 #include "MyGameMode.h"
-
 #include "GameRule.h"
+#include "PC_FPS.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -37,6 +37,12 @@ void AMyGameMode::Logout(AController* Exiting)
 	Super::Logout(Exiting);
 }
 
+void AMyGameMode::AddPoints(int Addby)
+{
+	Handle_GameRulePointsScored(UGameplayStatics::GetPlayerController(GetWorld(), 0) ,1  );
+	
+}
+
 void AMyGameMode::DecreaseCountdown()
 {
 	_CountdownTimer--;
@@ -57,6 +63,7 @@ void AMyGameMode::HandleGameRuleCompleted()
 
 void AMyGameMode::Handle_GameRulePointsScored(AController* scorer, int points)
 {
+	 Cast<APC_FPS>(scorer)->AddPointsToUI(points);
 }
 
 void AMyGameMode::HandleMatchIsWaitingToStart()

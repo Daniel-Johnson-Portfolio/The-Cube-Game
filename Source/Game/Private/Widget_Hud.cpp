@@ -21,15 +21,14 @@ void UWidget_Hud::UpdateHealth(float newHealthRatio)
 {
 	if(HealthBar)
 	{
-		
-		HealthBar->SetPercent(HealthBar->Percent - newHealthRatio);
+		HealthBar->SetPercent(HealthBar->GetPercent() - newHealthRatio/100.0f); //as percentage
 	}
 }
 
-void UWidget_Hud::UpdateScore(float newScore)
+void UWidget_Hud::UpdateScore(int newScore)
 {
 	if(ScoreText)
 	{
-	//	ScoreText->SetText(FText::FromString(FString::Printf("Score: %d", newScore)));
+		ScoreText->SetText(FText::FromString(FString::Printf(TEXT("Score: %d"), newScore)));
 	}
 }

@@ -7,7 +7,6 @@
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
 {
-
 	PrimaryComponentTick.bCanEverTick = false;
 	_MaxHealth = 100.0f;
 }
@@ -17,7 +16,6 @@ void UHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	_CurrentHealth = _MaxHealth;
-
 	GetOwner()->OnTakeAnyDamage.AddUniqueDynamic(this, &UHealthComponent::DamageTaken);
 }
 

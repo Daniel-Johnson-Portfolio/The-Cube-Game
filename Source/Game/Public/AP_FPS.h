@@ -30,9 +30,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<APC_FPS> _PlayerController;
 	UPROPERTY(BlueprintAssignable)
-	FOnPawnDamagedSignature OnDamaged;
+	FOnPawnDamagedSignature OnPawnDamaged;
 protected:
-
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<USceneComponent> _WeaponAttachPoint;

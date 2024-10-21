@@ -98,40 +98,39 @@ void APC_FPS::FireReleased()
 	}
 }
 
-void APC_FPS::OnPossess(APawn* InPawn)
+void APC_FPS::AddPointsToUI(float Points)
 {
-	Super::OnPossess(InPawn);
-	_Pawn = InPawn;
-	if(UEnhancedInputLocalPlayerSubsystem* Subsytem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-	{
-		if(UKismetSystemLibrary::DoesImplementInterface(InPawn, UMyInterface::StaticClass()))
-		{
-			Subsytem->AddMappingContext(IMyInterface::Execute_GetMappingContext(InPawn),0);
-			
-		}
-
-		
-	}
-	
+	_HUDWidget->UpdateScore(Points);
 }
 
 void APC_FPS::BeginPlay()
 {
 	Super::BeginPlay();
-
+	_Pawn = Cast<AAP_FPS>(this->GetCharacter());
+	_Pawn->OnPawnDamaged.AddUniqueDynamic(this, &APC_FPS::UpdateHealth);
 	if(_HUDWidgetClass)
 	{	
 		_HUDWidget = CreateWidget<UWidget_Hud, APC_FPS*>(this, _HUDWidgetClass.Get());
 		_HUDWidget->AddToViewport();
-		
 	}
-	_Pawn->OnDamaged.AddUniqueDynamic(this, &APC_FPS::UpdateHealth);
 	
+}
+
+void APC_FPS::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+ 
+	if(UEnhancedInputLocalPlayerSubsystem* subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		if(UKismetSystemLibrary::DoesImplementInterface(InPawn, UMyInterface::StaticClass()))
+		{
+			subsystem->AddMappingContext(IMyInterface::Execute_GetMappingContext(InPawn), 0);
+		}
+	}
 }
 void APC_FPS::UpdateHealth(float Change)
 {
-	
-	UE_LOG(LogTemp, Display, TEXT("PC has recived"));
+	UE_LOG(LogTemp, Display, TEXT("Damage for %f,"),Change);
 	_HUDWidget->UpdateHealth(Change);
 }
 

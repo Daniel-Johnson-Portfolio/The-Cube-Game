@@ -16,7 +16,7 @@ class GAME_API UWidget_Hud : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 	void UpdateHealth(float newHealthRatio);
-	void UpdateScore(float newScore);
+	void UpdateScore(int newScore);
 
 private:
 	UPROPERTY(meta = (BindWidget))

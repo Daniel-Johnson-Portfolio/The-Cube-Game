@@ -27,7 +27,13 @@ protected:
 	FTimerHandle _TimerDecreaseCountdown;
 	UPROPERTY(EditAnywhere, Category="Match Management")
 	TSubclassOf<APawn> _MatchPawn;
- 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int _points;
+
+	UFUNCTION(BlueprintCallable)
+	void AddPoints(int Addby);
+	
 	UFUNCTION()
 	void DecreaseCountdown();
 	
