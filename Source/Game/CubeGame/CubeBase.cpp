@@ -46,7 +46,7 @@ void ACubeBase::Input_Look_Implementation(FVector2D Value)
 	UE_LOG(LogTemp, Display, TEXT("X: %f Y: %f"), Value.X, Value.Y);
 	AddActorWorldRotation(FRotator(0.0f, Value.X, 0.0f));
 	_StaticMesh->AddLocalRotation(FRotator(0.0f, Value.X, 0.0f));
-	_SpringArm->SetRelativeRotation(FRotator(0.0f, FMath::Clamp(_SpringArm->GetRelativeRotation().Pitch + Value.Y, -30.0f, 30.0f), _SpringArm->GetRelativeRotation().Yaw));
+	_SpringArm->SetRelativeRotation(FRotator(FMath::Clamp(_SpringArm->GetRelativeRotation().Pitch + Value.Y, -_CameraPitchLimit, _CameraPitchLimit), _SpringArm->GetRelativeRotation().Yaw , 0.0f));
 }
 
 void ACubeBase::Input_Move_Implementation(FVector2D Value)

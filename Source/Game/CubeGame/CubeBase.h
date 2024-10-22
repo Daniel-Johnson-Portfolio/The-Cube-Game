@@ -31,6 +31,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<USpringArmComponent> _SpringArm;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Camera")
+	int _CameraPitchLimit;
+
+	
+	
+
 public:
 	virtual UInputMappingContext* GetMappingContext_Implementation() override;
 	virtual void Input_JumpPressed_Implementation() override;
