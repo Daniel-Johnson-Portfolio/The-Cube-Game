@@ -39,7 +39,7 @@ void AMyGameMode::Logout(AController* Exiting)
 
 void AMyGameMode::AddPoints(int Addby)
 {
-	Handle_GameRulePointsScored(UGameplayStatics::GetPlayerController(GetWorld(), 0) ,1  );
+//	Handle_GameRulePointsScored(UGameplayStatics::GetPlayerController(GetWorld(), 0) ,1  );
 	
 }
 
