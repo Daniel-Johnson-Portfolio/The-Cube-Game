@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "Inputs.h"
 #include "Camera/CameraComponent.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/MovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "CubeBase.generated.h"
 
@@ -30,9 +32,11 @@ protected:
 	TObjectPtr<UStaticMeshComponent> _StaticMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<USpringArmComponent> _SpringArm;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TObjectPtr<UMovementComponent> _MovementComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Camera")
-	int _CameraPitchLimit;
+	int _CameraPitchLimit = 30;
 
 	
 	

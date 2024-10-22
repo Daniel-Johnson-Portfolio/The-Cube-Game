@@ -4,6 +4,8 @@
 #include "CubeBase.h"
 
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/MovementComponent.h"
 
 
 // Sets default values
@@ -11,12 +13,16 @@ ACubeBase::ACubeBase()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	
 	_StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
+	//RootComponent = _StaticMesh;
 	_StaticMesh->SetupAttachment(RootComponent);
 	_SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	_SpringArm->SetupAttachment(_StaticMesh);
 	_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	_Camera->SetupAttachment(_SpringArm);
+	ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("/Game/SM_Cube"));
+	_StaticMesh->SetStaticMesh(MeshObj.Object);
 }
 
 // Called when the game starts or when spawned
