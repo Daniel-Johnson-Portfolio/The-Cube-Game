@@ -6,6 +6,7 @@
 #include "Inputs.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "CubeBase.generated.h"
 
 UCLASS(Abstract)
@@ -27,6 +28,8 @@ protected:
 	TObjectPtr<UInputMappingContext> _InputMapping;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<UStaticMeshComponent> _StaticMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TObjectPtr<USpringArmComponent> _SpringArm;
 
 public:
 	virtual UInputMappingContext* GetMappingContext_Implementation() override;

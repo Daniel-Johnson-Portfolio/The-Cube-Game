@@ -13,8 +13,10 @@ ACubeBase::ACubeBase()
 	PrimaryActorTick.bCanEverTick = false;
 	_StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	_StaticMesh->SetupAttachment(RootComponent);
+	_SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
+	_SpringArm->SetupAttachment(_StaticMesh);
 	_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	_Camera->SetupAttachment(_StaticMesh);
+	_Camera->SetupAttachment(_SpringArm);
 }
 
 // Called when the game starts or when spawned
@@ -44,8 +46,7 @@ void ACubeBase::Input_Look_Implementation(FVector2D Value)
 	UE_LOG(LogTemp, Display, TEXT("X: %f Y: %f"), Value.X, Value.Y);
 	AddActorWorldRotation(FRotator(0.0f, Value.X, 0.0f));
 	_StaticMesh->AddLocalRotation(FRotator(0.0f, Value.X, 0.0f));
-	FRotator pos = _StaticMesh->GetRelativeRotation();
-	FMath::Clamp(Value.Y, -20.0f, 20.0f);
+	_SpringArm->SetRelativeRotation(FRotator(0.0f, FMath::Clamp(_SpringArm->GetRelativeRotation().Pitch + Value.Y, -30.0f, 30.0f), _SpringArm->GetRelativeRotation().Yaw));
 }
 
 void ACubeBase::Input_Move_Implementation(FVector2D Value)
