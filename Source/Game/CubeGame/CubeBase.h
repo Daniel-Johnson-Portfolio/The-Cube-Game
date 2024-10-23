@@ -12,7 +12,7 @@
 #include "CubeBase.generated.h"
 
 UCLASS(Abstract)
-class GAME_API ACubeBase : public ACharacter, public IInputs
+class GAME_API ACubeBase : public APawn, public IInputs
 {
 	GENERATED_BODY()
 
@@ -33,10 +33,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<USpringArmComponent> _SpringArm;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TObjectPtr<UMovementComponent> _MovementComponent;
-
+	TObjectPtr<UBoxComponent> _BoxComponent;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Camera")
 	int _CameraPitchLimit = 30;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement Settings")
+	float _Movementspeed = 300.0f;
 
 	
 	
