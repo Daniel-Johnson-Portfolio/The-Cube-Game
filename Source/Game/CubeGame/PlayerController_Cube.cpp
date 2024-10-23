@@ -3,10 +3,12 @@
 
 #include "PlayerController_Cube.h"
 
+#include "CubeBase.h"
 #include "EnhancedInputComponent.h"
 #include "Inputs.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void APlayerController_Cube::SetupInputComponent()
@@ -18,7 +20,10 @@ void APlayerController_Cube::SetupInputComponent()
 		EIP->BindAction(_MoveAction, ETriggerEvent::Triggered, this, &APlayerController_Cube::Move);
 		EIP->BindAction(_JumpAction, ETriggerEvent::Triggered, this, &APlayerController_Cube::JumpPressed);
 		EIP->BindAction(_JumpAction, ETriggerEvent::Completed, this, &APlayerController_Cube::JumpReleased);
+		EIP->BindAction(_SwapChar, ETriggerEvent::Triggered, this , &APlayerController_Cube::SwapChar);
 	}
+
+
 }
 
 void APlayerController_Cube::Look(const FInputActionValue& Value)
@@ -69,6 +74,11 @@ void APlayerController_Cube::JumpReleased()
 	}
 }
 
+void APlayerController_Cube::SwapChar(){
+
+	this->Possess(_CharactersMap.FindRef(1));
+}
+
 void APlayerController_Cube::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
@@ -79,4 +89,23 @@ void APlayerController_Cube::OnPossess(APawn* InPawn)
 			subsystem->AddMappingContext(IInputs::Execute_GetMappingContext(InPawn), 0);
 		}
 	}
+}
+
+void APlayerController_Cube::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACubeBase::StaticClass(), FoundActors);
+	TArray<ACubeBase*> CubeBaseActors;
+	for (AActor* Actor : FoundActors)
+	{
+		ACubeBase* CubeBaseActor = Cast<ACubeBase>(Actor);
+		if (CubeBaseActor)
+		{
+			CubeBaseActors.Add(CubeBaseActor);
+			_CharactersMap.Add(FoundActors.Find(Actor) ,CubeBaseActor);
+		}
+	}
+	
 }

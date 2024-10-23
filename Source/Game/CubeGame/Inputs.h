@@ -29,6 +29,8 @@ public:
 	void Input_JumpPressed();
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Input_JumpReleased();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Input_NextChar();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UInputMappingContext* GetMappingContext();

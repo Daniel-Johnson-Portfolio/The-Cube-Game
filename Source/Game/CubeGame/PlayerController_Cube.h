@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "PlayerController_Cube.generated.h"
 
+class ACubeBase;
 /**
  * 
  */
@@ -25,7 +26,15 @@ protected:
 	TObjectPtr<UInputAction> _MoveAction;
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> _JumpAction;
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> _SwapChar;
+	UPROPERTY(EditAnywhere, Category="Characters")
+	TMap<int, ACubeBase*> _CharactersMap;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Character")
+	int _CurrentCharacter = 0;
 
+
+	
 	
 	virtual void SetupInputComponent() override;
 
@@ -33,6 +42,8 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void JumpPressed();
 	void JumpReleased();
+	void SwapChar();
 
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void BeginPlay() override;
 };
