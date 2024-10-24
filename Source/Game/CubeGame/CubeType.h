@@ -20,6 +20,6 @@ public:
 	TObjectPtr<UMaterial> _CubeMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector _CubeSize;
+	FVector _CubeSize = FVector(1.0f, 1.0f, 1.0f);
 	
 };
