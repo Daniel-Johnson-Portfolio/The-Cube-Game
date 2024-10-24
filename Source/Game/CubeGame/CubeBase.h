@@ -11,6 +11,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "CubeBase.generated.h"
 
+class UCubeType;
+
 UCLASS(Abstract)
 class GAME_API ACubeBase : public APawn, public IInputs
 {
@@ -19,6 +21,7 @@ class GAME_API ACubeBase : public APawn, public IInputs
 public:
 	// Sets default values for this character's properties
 	ACubeBase();
+	void Init(UCubeType* type);
 
 protected:
 	// Called when the game starts or when spawned

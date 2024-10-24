@@ -26,7 +26,16 @@ ACubeBase::ACubeBase()
 	_StaticMesh->SetStaticMesh(MeshObj.Object);
 
 	_StaticMesh->SetSimulatePhysics(true);
+
+	
 }
+
+void ACubeBase::Init(UCubeType* type)
+{
+	
+	
+}
+
 
 // Called when the game starts or when spawned
 void ACubeBase::BeginPlay()

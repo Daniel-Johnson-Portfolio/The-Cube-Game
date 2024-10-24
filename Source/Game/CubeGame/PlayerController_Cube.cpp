@@ -8,7 +8,7 @@
 #include "Inputs.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "EnhancedInputSubsystems.h"
-#include "Kismet/GameplayStatics.h"
+
 
 
 void APlayerController_Cube::SetupInputComponent()
@@ -20,10 +20,9 @@ void APlayerController_Cube::SetupInputComponent()
 		EIP->BindAction(_MoveAction, ETriggerEvent::Triggered, this, &APlayerController_Cube::Move);
 		EIP->BindAction(_JumpAction, ETriggerEvent::Triggered, this, &APlayerController_Cube::JumpPressed);
 		EIP->BindAction(_JumpAction, ETriggerEvent::Completed, this, &APlayerController_Cube::JumpReleased);
-		EIP->BindAction(_SwapChar, ETriggerEvent::Triggered, this , &APlayerController_Cube::SwapChar);
+		EIP->BindAction(_SwapChar, ETriggerEvent::Started, this , &APlayerController_Cube::SwapChar);
 	}
-
-
+	
 }
 
 void APlayerController_Cube::Look(const FInputActionValue& Value)
@@ -74,9 +73,14 @@ void APlayerController_Cube::JumpReleased()
 	}
 }
 
-void APlayerController_Cube::SwapChar(){
-
-	this->Possess(_CharactersMap.FindRef(1));
+void APlayerController_Cube::SwapChar()
+{
+	_CurrentCharacter++;
+	if(_CurrentCharacter == _CharacterArray.Num())
+	{
+		_CurrentCharacter = 0;
+	}
+	this->Possess(_CharacterArray[_CurrentCharacter]);
 }
 
 void APlayerController_Cube::OnPossess(APawn* InPawn)
@@ -94,18 +98,28 @@ void APlayerController_Cube::OnPossess(APawn* InPawn)
 void APlayerController_Cube::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACubeBase::StaticClass(), FoundActors);
-	TArray<ACubeBase*> CubeBaseActors;
-	for (AActor* Actor : FoundActors)
+	if(!_CharacterClassArray.IsEmpty())
 	{
-		ACubeBase* CubeBaseActor = Cast<ACubeBase>(Actor);
-		if (CubeBaseActor)
+		FActorSpawnParameters _ActorSpawnParameters;
+		_ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		for (TSubclassOf<ACubeBase> Char : _CharacterClassArray)
 		{
-			CubeBaseActors.Add(CubeBaseActor);
-			_CharactersMap.Add(FoundActors.Find(Actor) ,CubeBaseActor);
+			try
+			{
+				ACubeBase* Obj = GetWorld()->SpawnActor<ACubeBase>(Char, FVector(10, 10,10 ), FRotator::ZeroRotator, _ActorSpawnParameters);
+				_CharacterArray.Add(Obj);
+			}
+			catch (...)
+			{
+				UE_LOG(LogTemp, Error, TEXT("Failed To Spawn Any Pawns"));
+			}
+		}
+		if(!_CharacterArray.IsEmpty())
+		{
+			this->Possess(_CharacterArray[0]);
 		}
 	}
+	
+	
 	
 }

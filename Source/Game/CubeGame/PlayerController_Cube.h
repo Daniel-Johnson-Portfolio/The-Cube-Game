@@ -29,10 +29,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> _SwapChar;
 	UPROPERTY(EditAnywhere, Category="Characters")
-	TMap<int, ACubeBase*> _CharactersMap;
+	TArray<TSubclassOf<ACubeBase>> _CharacterClassArray;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Character")
 	int _CurrentCharacter = 0;
-
+	
+	UPROPERTY(VisibleAnywhere, Category="Characters")
+	TArray<ACubeBase*> _CharacterArray;
 
 	
 	
