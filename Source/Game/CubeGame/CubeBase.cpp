@@ -3,6 +3,7 @@
 
 #include "CubeBase.h"
 
+#include "CubeType.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/MovementComponent.h"
@@ -26,14 +27,18 @@ ACubeBase::ACubeBase()
 	_StaticMesh->SetStaticMesh(MeshObj.Object);
 
 	_StaticMesh->SetSimulatePhysics(true);
-
+	
 	
 }
 
 void ACubeBase::Init(UCubeType* type)
 {
+	_StaticMesh->SetMaterial(0, type->_CubeMaterial);
 	
-	
+	FTransform NewTransform;
+	NewTransform.SetScale3D(type->_CubeSize);
+	_StaticMesh->SetRelativeTransform(NewTransform);
+	UE_LOG(LogTemp, Display, TEXT("INITRAN"));
 }
 
 
@@ -41,7 +46,10 @@ void ACubeBase::Init(UCubeType* type)
 void ACubeBase::BeginPlay()
 {
 	Super::BeginPlay();
-
+	if(_CubeType)
+	{
+		this->Init(_CubeType);
+	}
 }
 
 UInputMappingContext* ACubeBase::GetMappingContext_Implementation()
@@ -68,8 +76,6 @@ void ACubeBase::Input_Look_Implementation(FVector2D Value)
 
 void ACubeBase::Input_Move_Implementation(FVector2D Value)
 {
-    UE_LOG(LogTemp, Display, TEXT("X: %f Y: %f"), Value.X, Value.Y);
-	
     FVector _ForwardVector = _Camera->GetForwardVector();  
     FVector _RightVector = _Camera->GetRightVector();       
 	

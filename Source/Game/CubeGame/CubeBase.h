@@ -43,8 +43,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement Settings")
 	float _Movementspeed = 300.0f;
 
-	
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character")
+	UCubeType* _CubeType;
 
 public:
 	virtual UInputMappingContext* GetMappingContext_Implementation() override;
