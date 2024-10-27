@@ -86,7 +86,7 @@ void ACubeBase::Input_Move_Implementation(FVector2D Value)
 	
     FVector _MovementOffset = _MovementDirection * _Movementspeed * GetWorld()->GetDeltaSeconds();
 	
-	_StaticMesh->AddWorldTransform(FTransform(_MovementOffset));
+	_StaticMesh->AddWorldOffset((_MovementOffset));
 }
 
 // Called every frame
