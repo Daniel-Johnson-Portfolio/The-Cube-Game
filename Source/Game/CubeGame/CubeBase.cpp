@@ -20,6 +20,8 @@ ACubeBase::ACubeBase()
 	RootComponent = _StaticMesh;
 	_SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	_SpringArm->SetupAttachment(_StaticMesh);
+	_SpringArm->SetRelativeLocation(FVector(-30, 0, 100));
+	
 	_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	_Camera->SetupAttachment(_SpringArm);
 	
@@ -28,11 +30,13 @@ ACubeBase::ACubeBase()
 
 	_StaticMesh->SetSimulatePhysics(true);
 	
-	
+	_StaticMesh->BodyInstance.bLockXRotation = true;
+	_StaticMesh->BodyInstance.bLockYRotation = true;
 }
 
 void ACubeBase::Init(UCubeType* type)
 {
+	_CubeType = type;
 	_StaticMesh->SetMaterial(0, type->_CubeMaterial);
 	
 	FTransform NewTransform;
@@ -46,17 +50,8 @@ void ACubeBase::Init(UCubeType* type)
 void ACubeBase::BeginPlay()
 {
 	Super::BeginPlay();
-	if(_CubeType)
-	{
-		this->Init(_CubeType);
-	}
+	
 }
-
-UInputMappingContext* ACubeBase::GetMappingContext_Implementation()
-{
-	return _InputMapping;
-}
-
 void ACubeBase::Input_JumpPressed_Implementation()
 {
 	//ACubeBase::Jump();
@@ -99,5 +94,10 @@ void ACubeBase::Tick(float DeltaTime)
 void ACubeBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ACubeBase::SetLocaiton(FVector location)
+{
+	_StaticMesh->SetWorldLocation(location);
 }
 

@@ -36,7 +36,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Characters")
 	TArray<ACubeBase*> _CharacterArray;
 
-	
+	UPROPERTY(VisibleAnywhere, Category="Characters")
+	TArray<TObjectPtr<AActor>> _PlayerStarts;
+
 	
 	virtual void SetupInputComponent() override;
 
@@ -48,4 +50,20 @@ protected:
 
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void BeginPlay() override;
+
+public:
+	void FindPlayerStart_Implementation();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Cube Data")
+	UDataTable* _CubeDataTable;
+
+	UPROPERTY()
+	TSubclassOf<ACubeBase> _CubeClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	TObjectPtr<UInputMappingContext> _InputMapping;
+
+	// Function to return the input mapping context
+	UInputMappingContext* GetMappingContext() const { return _InputMapping; }
+
 };

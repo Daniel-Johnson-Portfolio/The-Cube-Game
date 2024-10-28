@@ -13,7 +13,7 @@
 
 class UCubeType;
 
-UCLASS(Abstract)
+UCLASS()
 class GAME_API ACubeBase : public APawn, public IInputs
 {
 	GENERATED_BODY()
@@ -29,8 +29,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UCameraComponent> _Camera;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UInputMappingContext> _InputMapping;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<UStaticMeshComponent> _StaticMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -43,11 +41,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement Settings")
 	float _Movementspeed = 300.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character")
-	UCubeType* _CubeType;
+	
 
 public:
-	virtual UInputMappingContext* GetMappingContext_Implementation() override;
 	virtual void Input_JumpPressed_Implementation() override;
 	virtual void Input_JumpReleased_Implementation() override;
 	virtual void Input_Look_Implementation(FVector2D Value) override;
@@ -57,4 +53,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void SetLocaiton(FVector location);
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character")
+	UCubeType* _CubeType;
 };

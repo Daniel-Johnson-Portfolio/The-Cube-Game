@@ -4,11 +4,13 @@
 #include "PlayerController_Cube.h"
 
 #include "CubeBase.h"
+#include "CubeDataRow.h"
 #include "EnhancedInputComponent.h"
 #include "Inputs.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "EnhancedInputSubsystems.h"
-
+#include "GameFramework/PlayerStart.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void APlayerController_Cube::SetupInputComponent()
@@ -98,28 +100,89 @@ void APlayerController_Cube::OnPossess(APawn* InPawn)
 void APlayerController_Cube::BeginPlay()
 {
 	Super::BeginPlay();
-	if(!_CharacterClassArray.IsEmpty())
+	
+	if (APlayerController* PC = Cast<APlayerController>(this))
 	{
+		UEnhancedInputLocalPlayerSubsystem* InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
+
+		if (InputSubsystem && _InputMapping)
+		{
+			InputSubsystem->AddMappingContext(_InputMapping, 1);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("InputSubsystem or _InputMapping is null in PlayerController_Cube"));
+		}
+	}
+
+	FindPlayerStart_Implementation();
+	
+	if(_CubeDataTable)
+	{
+		FString ContextString(TEXT("Cube Data Retrieval"));
+		TArray<FCubeDataRow*> DataRows;
+		_CubeDataTable->GetAllRows<FCubeDataRow>(ContextString, DataRows);
+		
 		FActorSpawnParameters _ActorSpawnParameters;
 		_ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		for (TSubclassOf<ACubeBase> Char : _CharacterClassArray)
+
+		float _SpawnRadius = (DataRows.Num() * 100.0f);
+		FVector _RandomPoint;
+		for (FCubeDataRow* Row : DataRows)
 		{
-			try
+			if (Row)
 			{
-				ACubeBase* Obj = GetWorld()->SpawnActor<ACubeBase>(Char, FVector(10, 10,10 ), FRotator::ZeroRotator, _ActorSpawnParameters);
-				_CharacterArray.Add(Obj);
-			}
-			catch (...)
-			{
-				UE_LOG(LogTemp, Error, TEXT("Failed To Spawn Any Pawns"));
+				if(_PlayerStarts[0])
+				{
+					_RandomPoint = _PlayerStarts[0]->GetActorLocation() + FMath::VRand() * FMath::RandRange(0.0f, _SpawnRadius);
+				}
+				else
+				{
+					_RandomPoint = FVector(10,10,10);
+					UE_LOG(LogTemp, Warning, TEXT("Failed to get random location"));
+				}
+				
+				ACubeBase* Obj = GetWorld()->SpawnActor<ACubeBase>(ACubeBase::StaticClass(), FVector(), FRotator::ZeroRotator, _ActorSpawnParameters);
+        
+				if (Obj)
+				{
+					_CharacterArray.Add(Obj);
+					if (Row->CubeDataAsset)
+					{
+						Obj->Init(Row->CubeDataAsset);
+						Obj->SetActorLocation(FVector(_RandomPoint.X, _RandomPoint.Y, 10.0f));
+					}
+					else
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Row's CubeDataAsset is null"));
+					}
+				}
+				else
+				{
+					UE_LOG(LogTemp, Error, TEXT("Failed to spawn Cube Actor from _CubeClass"));
+				}
 			}
 		}
+
 		if(!_CharacterArray.IsEmpty())
 		{
 			this->Possess(_CharacterArray[0]);
 		}
+		
 	}
-	
-	
-	
 }
+
+void APlayerController_Cube::FindPlayerStart_Implementation()
+{
+	if(_PlayerStarts.Num() == 0)
+	{
+		TArray<AActor*> foundActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), foundActors);
+		for(AActor* actor : foundActors)
+		{
+			_PlayerStarts.Add(actor);
+		}
+	}
+}
+
+
