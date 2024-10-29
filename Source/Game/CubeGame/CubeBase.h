@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AIController_Cube.h"
 #include "Inputs.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
@@ -13,6 +14,8 @@
 
 class UCubeType;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPawnHasMovedSignature, FVector, Pos);
+
 UCLASS()
 class GAME_API ACubeBase : public APawn, public IInputs
 {
@@ -21,6 +24,10 @@ class GAME_API ACubeBase : public APawn, public IInputs
 public:
 	// Sets default values for this character's properties
 	ACubeBase();
+
+	UPROPERTY(BlueprintAssignable)
+	FPawnHasMovedSignature OnMoved;
+	
 	void Init(UCubeType* type);
 
 protected:
@@ -48,6 +55,7 @@ public:
 	virtual void Input_JumpReleased_Implementation() override;
 	virtual void Input_Look_Implementation(FVector2D Value) override;
 	virtual void Input_Move_Implementation(FVector2D Value) override;
+	virtual void Input_AIMove_Implementation(FVector Pos) override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

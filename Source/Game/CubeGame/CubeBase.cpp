@@ -3,10 +3,12 @@
 
 #include "CubeBase.h"
 
+#include "AITypes.h"
 #include "CubeType.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/MovementComponent.h"
+#include "Navigation/PathFollowingComponent.h"
 
 
 // Sets default values
@@ -82,7 +84,15 @@ void ACubeBase::Input_Move_Implementation(FVector2D Value)
     FVector _MovementOffset = _MovementDirection * _Movementspeed * GetWorld()->GetDeltaSeconds();
 	
 	_StaticMesh->AddWorldOffset((_MovementOffset));
+
+	OnMoved.Broadcast(this->GetActorLocation());
 }
+
+void ACubeBase::Input_AIMove_Implementation(FVector Pos)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AIIAIAIA %f %f %f"), Pos.X, Pos.Y, Pos.Z);
+}
+
 
 // Called every frame
 void ACubeBase::Tick(float DeltaTime)

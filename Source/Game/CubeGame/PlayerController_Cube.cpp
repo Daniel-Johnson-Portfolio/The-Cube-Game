@@ -2,7 +2,6 @@
 
 
 #include "PlayerController_Cube.h"
-
 #include "CubeBase.h"
 #include "CubeDataRow.h"
 #include "EnhancedInputComponent.h"
@@ -143,7 +142,6 @@ void APlayerController_Cube::BeginPlay()
 				}
 				
 				ACubeBase* Obj = GetWorld()->SpawnActor<ACubeBase>(ACubeBase::StaticClass(), FVector(), FRotator::ZeroRotator, _ActorSpawnParameters);
-        
 				if (Obj)
 				{
 					_CharacterArray.Add(Obj);
@@ -166,7 +164,10 @@ void APlayerController_Cube::BeginPlay()
 
 		if(!_CharacterArray.IsEmpty())
 		{
-			this->Possess(_CharacterArray[0]);
+			_PossessedPawn = _CharacterArray[0];
+			this->Possess(_PossessedPawn);
+			_CharacterArray.RemoveAt(0);
+			_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
 		}
 		
 	}
@@ -183,6 +184,17 @@ void APlayerController_Cube::FindPlayerStart_Implementation()
 			_PlayerStarts.Add(actor);
 		}
 	}
+}
+
+void APlayerController_Cube::MoveAI(FVector pos)
+{
+	for(ACubeBase* Char : _CharacterArray)
+	{
+		IInputs::Execute_Input_AIMove(Char, pos);
+
+		
+	}
+	
 }
 
 

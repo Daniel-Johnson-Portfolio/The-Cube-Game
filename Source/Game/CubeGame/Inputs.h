@@ -31,6 +31,8 @@ public:
 	void Input_JumpReleased();
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Input_NextChar();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Input_AIMove(FVector Pos);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UInputMappingContext* GetMappingContext();

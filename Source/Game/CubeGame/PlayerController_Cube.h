@@ -54,6 +54,9 @@ protected:
 public:
 	void FindPlayerStart_Implementation();
 	
+	UFUNCTION()
+	void MoveAI(FVector pos);
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Cube Data")
 	UDataTable* _CubeDataTable;
 
@@ -62,6 +65,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	TObjectPtr<UInputMappingContext> _InputMapping;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	ACubeBase* _PossessedPawn;
 
 	// Function to return the input mapping context
 	UInputMappingContext* GetMappingContext() const { return _InputMapping; }
