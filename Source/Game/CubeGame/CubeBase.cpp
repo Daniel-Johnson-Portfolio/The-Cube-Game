@@ -2,19 +2,11 @@
 
 
 #include "CubeBase.h"
-
-#include "AITypes.h"
 #include "CubeType.h"
 #include "Camera/CameraComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "GameFramework/MovementComponent.h"
-#include "Navigation/PathFollowingComponent.h"
-
-
 // Sets default values
 ACubeBase::ACubeBase()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	
 	
@@ -36,19 +28,7 @@ ACubeBase::ACubeBase()
 	_StaticMesh->BodyInstance.bLockYRotation = true;
 }
 
-void ACubeBase::Init(UCubeType* type)
-{
-	_CubeType = type;
-	_StaticMesh->SetMaterial(0, type->_CubeMaterial);
-	
-	FTransform NewTransform;
-	NewTransform.SetScale3D(type->_CubeSize);
-	_StaticMesh->SetRelativeTransform(NewTransform);
-	UE_LOG(LogTemp, Display, TEXT("INITRAN"));
-}
 
-
-// Called when the game starts or when spawned
 void ACubeBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -56,12 +36,12 @@ void ACubeBase::BeginPlay()
 }
 void ACubeBase::Input_JumpPressed_Implementation()
 {
-	//ACubeBase::Jump();
-}
-
-void ACubeBase::Input_JumpReleased_Implementation()
-{
-	//ACubeBase::StopJumping();
+	CheckIfGrounded();
+	if (bIsGrounded)
+	{
+		_StaticMesh->AddImpulse(FVector(0, 0, 75000));
+		bIsGrounded = false;
+	}
 }
 
 void ACubeBase::Input_Look_Implementation(FVector2D Value)
@@ -82,15 +62,41 @@ void ACubeBase::Input_Move_Implementation(FVector2D Value)
     FVector _MovementDirection = (_ForwardVector * Value.Y + _RightVector * Value.X).GetSafeNormal();
 	
     FVector _MovementOffset = _MovementDirection * _Movementspeed * GetWorld()->GetDeltaSeconds();
-	
 	_StaticMesh->AddWorldOffset((_MovementOffset));
 
 	OnMoved.Broadcast(this->GetActorLocation());
 }
 
-void ACubeBase::Input_AIMove_Implementation(FVector Pos)
+void ACubeBase::Input_AIMove_Implementation(FVector TargetPosition)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AIIAIAIA %f %f %f"), Pos.X, Pos.Y, Pos.Z);
+	if(FVector::Dist(TargetPosition, GetActorLocation()) > 500.0f)
+	{
+		TargetPosition = TargetPosition + FMath::VRand() * FMath::RandRange(150.0f, 250.0f);
+		TargetPosition.Z = 0.0f;
+		FVector CurrentLocation = GetActorLocation();
+	
+		float DeltaTime = GetWorld()->GetDeltaSeconds();
+		float InterpSpeed = 0.5f;
+
+		FVector NewLocation = FMath::VInterpTo(CurrentLocation, TargetPosition, DeltaTime, InterpSpeed);
+		SetActorLocation(NewLocation);
+	}
+	
+}
+
+void ACubeBase::Pawn_Init_Implementation(UCubeType* Type, FVector Location)
+{
+	_StaticMesh->SetMassOverrideInKg(FName(NAME_None),Type->_CubeMass, true);
+	
+	IPawnInterface::Pawn_Init_Implementation(Type, Location);
+	_StaticMesh->SetMaterial(0, Type->_CubeMaterial);
+	
+	FTransform NewTransform;
+	NewTransform.SetScale3D(Type->_CubeSize);
+	NewTransform.SetLocation(Location);
+	_StaticMesh->SetRelativeTransform(NewTransform);
+
+	_CubeExtents2D = FVector(_StaticMesh->GetComponentScale().X * 50.0f, _StaticMesh->GetComponentScale().Y * 50.0f, 0.0f);
 }
 
 
@@ -106,8 +112,39 @@ void ACubeBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void ACubeBase::SetLocaiton(FVector location)
+void ACubeBase::CheckIfGrounded()
 {
-	_StaticMesh->SetWorldLocation(location);
-}
+	FVector Start = GetActorLocation();
+	FVector End = Start - FVector(0, 0, -5); // Check downwards
 
+	FHitResult HitResult;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this);  // Ignore self in trace
+
+	// Define the box extent (size)
+	// Width, Depth, Height
+
+	// Perform the box trace (sweep)
+	bool bHit = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		Start,
+		End,
+		FQuat::Identity,                 // No rotation
+		ECC_Visibility,                  // Collision channel
+		FCollisionShape::MakeBox(_CubeExtents2D),  // Create a box shape
+		CollisionParams
+	);
+
+	// Set grounded state based on hit result
+	if (bHit && HitResult.Normal.Z > 0.5f) // Check for a valid ground normal
+	{
+		bIsGrounded = true;
+	}
+	else
+	{
+		bIsGrounded = false;
+	}
+
+	// Optional: Debug visualization
+	DrawDebugBox(GetWorld(), HitResult.Location, _CubeExtents2D, FColor::Green, false, 1, 0, 1);
+}

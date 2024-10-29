@@ -6,6 +6,7 @@
 #include "CubeDataRow.h"
 #include "EnhancedInputComponent.h"
 #include "Inputs.h"
+#include "PawnInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/PlayerStart.h"
@@ -20,7 +21,6 @@ void APlayerController_Cube::SetupInputComponent()
 		EIP->BindAction(_LookAction, ETriggerEvent::Triggered, this, &APlayerController_Cube::Look);
 		EIP->BindAction(_MoveAction, ETriggerEvent::Triggered, this, &APlayerController_Cube::Move);
 		EIP->BindAction(_JumpAction, ETriggerEvent::Triggered, this, &APlayerController_Cube::JumpPressed);
-		EIP->BindAction(_JumpAction, ETriggerEvent::Completed, this, &APlayerController_Cube::JumpReleased);
 		EIP->BindAction(_SwapChar, ETriggerEvent::Started, this , &APlayerController_Cube::SwapChar);
 	}
 	
@@ -29,7 +29,6 @@ void APlayerController_Cube::SetupInputComponent()
 void APlayerController_Cube::Look(const FInputActionValue& Value)
 {
 	FVector2D LookVector = Value.Get<FVector2D>();
-	UE_LOG(LogTemp, Display, TEXT("X: %f Y: %f"), LookVector.X, LookVector.Y);
 	if(APawn* currentPawn = GetPawn())
 	{
 		if(UKismetSystemLibrary::DoesImplementInterface(currentPawn, UInputs::StaticClass()))
@@ -63,37 +62,19 @@ void APlayerController_Cube::JumpPressed()
 	}
 }
 
-void APlayerController_Cube::JumpReleased()
-{
-	if(APawn* currentPawn = GetPawn())
-	{
-		if(UKismetSystemLibrary::DoesImplementInterface(currentPawn, UInputs::StaticClass()))
-		{
-			IInputs::Execute_Input_JumpReleased(currentPawn);
-		}
-	}
-}
-
 void APlayerController_Cube::SwapChar()
 {
-	_CurrentCharacter++;
-	if(_CurrentCharacter == _CharacterArray.Num())
-	{
-		_CurrentCharacter = 0;
-	}
-	this->Possess(_CharacterArray[_CurrentCharacter]);
+	_CharacterArray.Add(_PossessedPawn);
+	_PossessedPawn = _CharacterArray[0];
+	this->Possess(_PossessedPawn);
+	_CharacterArray.RemoveAt(0);
+	_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
+	
 }
 
 void APlayerController_Cube::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	if(UEnhancedInputLocalPlayerSubsystem* subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-	{
-		if(UKismetSystemLibrary::DoesImplementInterface(InPawn, UInputs::StaticClass()))
-		{
-			subsystem->AddMappingContext(IInputs::Execute_GetMappingContext(InPawn), 0);
-		}
-	}
 }
 
 void APlayerController_Cube::BeginPlay()
@@ -138,7 +119,7 @@ void APlayerController_Cube::BeginPlay()
 				else
 				{
 					_RandomPoint = FVector(10,10,10);
-					UE_LOG(LogTemp, Warning, TEXT("Failed to get random location"));
+					UE_LOG(LogTemp, Warning, TEXT("Failed to find player start, Spawning at 10,10,10"));
 				}
 				
 				ACubeBase* Obj = GetWorld()->SpawnActor<ACubeBase>(ACubeBase::StaticClass(), FVector(), FRotator::ZeroRotator, _ActorSpawnParameters);
@@ -147,8 +128,11 @@ void APlayerController_Cube::BeginPlay()
 					_CharacterArray.Add(Obj);
 					if (Row->CubeDataAsset)
 					{
-						Obj->Init(Row->CubeDataAsset);
-						Obj->SetActorLocation(FVector(_RandomPoint.X, _RandomPoint.Y, 10.0f));
+						if(UKismetSystemLibrary::DoesImplementInterface(Obj, UPawnInterface::StaticClass()))
+						{
+							IPawnInterface::Execute_Pawn_Init(Obj, Row->CubeDataAsset, FVector(_RandomPoint.X, _RandomPoint.Y, 10.0f));
+						}
+						
 					}
 					else
 					{
@@ -158,6 +142,14 @@ void APlayerController_Cube::BeginPlay()
 				else
 				{
 					UE_LOG(LogTemp, Error, TEXT("Failed to spawn Cube Actor from _CubeClass"));
+				}
+
+				if(UEnhancedInputLocalPlayerSubsystem* subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+				{
+					if(UKismetSystemLibrary::DoesImplementInterface(Obj, UInputs::StaticClass()))
+					{
+						subsystem->AddMappingContext(IInputs::Execute_GetMappingContext(Obj), 0);
+					}
 				}
 			}
 		}
@@ -191,8 +183,6 @@ void APlayerController_Cube::MoveAI(FVector pos)
 	for(ACubeBase* Char : _CharacterArray)
 	{
 		IInputs::Execute_Input_AIMove(Char, pos);
-
-		
 	}
 	
 }

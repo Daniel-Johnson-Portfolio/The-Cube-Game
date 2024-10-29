@@ -45,7 +45,6 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void Move(const FInputActionValue& Value);
 	void JumpPressed();
-	void JumpReleased();
 	void SwapChar();
 
 	virtual void OnPossess(APawn* InPawn) override;

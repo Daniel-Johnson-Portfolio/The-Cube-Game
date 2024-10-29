@@ -3,12 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIController_Cube.h"
 #include "Inputs.h"
+#include "PawnInterface.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
-#include "GameFramework/Character.h"
-#include "GameFramework/MovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "CubeBase.generated.h"
 
@@ -17,7 +15,7 @@ class UCubeType;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPawnHasMovedSignature, FVector, Pos);
 
 UCLASS()
-class GAME_API ACubeBase : public APawn, public IInputs
+class GAME_API ACubeBase : public APawn, public IInputs, public IPawnInterface
 {
 	GENERATED_BODY()
 
@@ -28,8 +26,6 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FPawnHasMovedSignature OnMoved;
 	
-	void Init(UCubeType* type);
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,30 +36,36 @@ protected:
 	TObjectPtr<UStaticMeshComponent> _StaticMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<USpringArmComponent> _SpringArm;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TObjectPtr<UBoxComponent> _BoxComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Camera")
 	int _CameraPitchLimit = 30;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement Settings")
 	float _Movementspeed = 300.0f;
 
+	FVector _CubeExtents2D;
+
 	
 
 public:
 	virtual void Input_JumpPressed_Implementation() override;
-	virtual void Input_JumpReleased_Implementation() override;
 	virtual void Input_Look_Implementation(FVector2D Value) override;
 	virtual void Input_Move_Implementation(FVector2D Value) override;
+	
 	virtual void Input_AIMove_Implementation(FVector Pos) override;
+
+	virtual void Pawn_Init_Implementation(UCubeType* Type, FVector Location) override;
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	void SetLocaiton(FVector location);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character")
 	UCubeType* _CubeType;
+
+private:
+	bool bIsGrounded = false;                 // True when the cube is on the ground
+
+	void CheckIfGrounded();      
 };

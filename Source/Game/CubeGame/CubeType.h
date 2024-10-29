@@ -21,5 +21,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector _CubeSize = FVector(1.0f, 1.0f, 1.0f);
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float _CubeMass = 150.0f;
 };
