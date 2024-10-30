@@ -65,7 +65,11 @@ public:
 	UCubeType* _CubeType;
 
 private:
-	bool bIsGrounded = false;                 // True when the cube is on the ground
+	bool bIsGrounded = false;
+	bool bCanJump = true;
+	float JumpCooldown = 0.5f;               
+	FTimerHandle TimerHandle_JumpCooldown;
 
-	void CheckIfGrounded();      
+	void CheckIfGrounded();
+	void ResetJumpCooldown();   
 };

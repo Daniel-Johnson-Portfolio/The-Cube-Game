@@ -36,11 +36,17 @@ void ACubeBase::BeginPlay()
 }
 void ACubeBase::Input_JumpPressed_Implementation()
 {
-	CheckIfGrounded();
-	if (bIsGrounded)
+	if (bCanJump) 
 	{
-		_StaticMesh->AddImpulse(FVector(0, 0, 75000));
-		bIsGrounded = false;
+		bCanJump = false;
+		CheckIfGrounded();
+		if (bIsGrounded)
+		{
+			_StaticMesh->AddImpulse(FVector(0, 0, 75000));
+			bIsGrounded = false;
+		}
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle_JumpCooldown, this, &ACubeBase::ResetJumpCooldown, JumpCooldown, false);
+		//make cool down UI
 	}
 }
 
@@ -106,7 +112,6 @@ void ACubeBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
 void ACubeBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -114,29 +119,27 @@ void ACubeBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ACubeBase::CheckIfGrounded()
 {
-	FVector Start = GetActorLocation();
-	FVector End = Start - FVector(0, 0, -5); // Check downwards
+	FVector Start = _StaticMesh->GetComponentLocation();
+	FVector End = Start - FVector(0, 0, 5); // Check downwards
+	FRotator Rotation = FRotator(_StaticMesh->GetComponentRotation()); 
+	
 
 	FHitResult HitResult;
 	FCollisionQueryParams CollisionParams;
-	CollisionParams.AddIgnoredActor(this);  // Ignore self in trace
-
-	// Define the box extent (size)
-	// Width, Depth, Height
-
-	// Perform the box trace (sweep)
+	CollisionParams.AddIgnoredActor(this);
+	FQuat BoxRotation = Rotation.Quaternion();
+	
 	bool bHit = GetWorld()->SweepSingleByChannel(
 		HitResult,
 		Start,
 		End,
-		FQuat::Identity,                 // No rotation
-		ECC_Visibility,                  // Collision channel
-		FCollisionShape::MakeBox(_CubeExtents2D),  // Create a box shape
+		BoxRotation, 
+		ECC_Visibility,                 
+		FCollisionShape::MakeBox(_CubeExtents2D),  
 		CollisionParams
 	);
-
-	// Set grounded state based on hit result
-	if (bHit && HitResult.Normal.Z > 0.5f) // Check for a valid ground normal
+	
+	if (bHit && HitResult.Normal.Z > 0.5f) 
 	{
 		bIsGrounded = true;
 	}
@@ -144,7 +147,11 @@ void ACubeBase::CheckIfGrounded()
 	{
 		bIsGrounded = false;
 	}
+	
+	DrawDebugBox(GetWorld(), HitResult.Location, _CubeExtents2D, BoxRotation, FColor::Green, false, 5, 0, 1);
+}
 
-	// Optional: Debug visualization
-	DrawDebugBox(GetWorld(), HitResult.Location, _CubeExtents2D, FColor::Green, false, 1, 0, 1);
+void ACubeBase::ResetJumpCooldown()
+{
+	bCanJump = true;
 }
