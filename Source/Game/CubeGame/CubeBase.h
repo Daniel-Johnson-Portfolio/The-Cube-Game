@@ -17,6 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPawnHasMovedSignature, FVector, Pos
 UCLASS()
 class GAME_API ACubeBase : public APawn, public IInputs, public IPawnInterface
 {
+	//Changing to character may be an idea
 	GENERATED_BODY()
 
 public:
@@ -44,7 +45,6 @@ protected:
 
 	FVector _CubeExtents2D;
 
-	
 
 public:
 	virtual void Input_JumpPressed_Implementation() override;
@@ -71,5 +71,6 @@ private:
 	FTimerHandle TimerHandle_JumpCooldown;
 
 	void CheckIfGrounded();
-	void ResetJumpCooldown();   
+	void ResetJumpCooldown();
+	FHitResult DownwardTrace(FVector StartPos, FVector EndPos, FCollisionQueryParams CollisionParams, FQuat BoxRotation, ECollisionChannel TraceChannel = ECC_Visibility);
 };

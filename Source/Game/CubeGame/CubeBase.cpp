@@ -87,7 +87,6 @@ void ACubeBase::Input_AIMove_Implementation(FVector TargetPosition)
 		FVector NewLocation = FMath::VInterpTo(CurrentLocation, TargetPosition, DeltaTime, InterpSpeed);
 		SetActorLocation(NewLocation);
 	}
-	
 }
 
 void ACubeBase::Pawn_Init_Implementation(UCubeType* Type, FVector Location)
@@ -123,23 +122,14 @@ void ACubeBase::CheckIfGrounded()
 	FVector End = Start - FVector(0, 0, 5); // Check downwards
 	FRotator Rotation = FRotator(_StaticMesh->GetComponentRotation()); 
 	
-
 	FHitResult HitResult;
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(this);
 	FQuat BoxRotation = Rotation.Quaternion();
 	
-	bool bHit = GetWorld()->SweepSingleByChannel(
-		HitResult,
-		Start,
-		End,
-		BoxRotation, 
-		ECC_Visibility,                 
-		FCollisionShape::MakeBox(_CubeExtents2D),  
-		CollisionParams
-	);
+	HitResult = DownwardTrace(Start, End, CollisionParams, BoxRotation, ECC_Visibility);
 	
-	if (bHit && HitResult.Normal.Z > 0.5f) 
+	if (HitResult.Normal.Z > 0.5f) 
 	{
 		bIsGrounded = true;
 	}
@@ -155,3 +145,26 @@ void ACubeBase::ResetJumpCooldown()
 {
 	bCanJump = true;
 }
+
+FHitResult ACubeBase::DownwardTrace(FVector StartPos, FVector EndPos, FCollisionQueryParams CollisionParams, FQuat BoxRotation, ECollisionChannel TraceChannel)
+{
+	FHitResult HitResult;
+	
+	bool bHit = GetWorld()->SweepSingleByChannel
+		(
+			HitResult,
+			StartPos,
+			EndPos,
+			BoxRotation, 
+			ECC_Visibility,                 
+			FCollisionShape::MakeBox(_CubeExtents2D),  
+			CollisionParams
+		);
+	
+	DrawDebugBox(GetWorld(), HitResult.Location, _CubeExtents2D, BoxRotation, FColor::Green, false, 5, 0, 1);
+	return HitResult;
+}
+
+
+
+
