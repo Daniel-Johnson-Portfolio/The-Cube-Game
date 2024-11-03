@@ -4,7 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "CollisionQueryParams.h"
+#include "Engine/World.h"
+#include "Engine/EngineTypes.h"
+#include "GameFramework/Actor.h"
 #include "PawnInterface.generated.h"
+
 
 class UCubeType;
 // This class does not need to be modified.
