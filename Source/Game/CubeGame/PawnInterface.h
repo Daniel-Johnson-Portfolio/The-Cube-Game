@@ -32,5 +32,6 @@ public:
 	void Pawn_Init(UCubeType* Type, FVector Location);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	FHitResult ReturnAactorUnderPawn(FCollisionQueryParams Collision); 
+	FHitResult ReturnActorUnderPawn(FCollisionQueryParams Collision); 
+	
 };
