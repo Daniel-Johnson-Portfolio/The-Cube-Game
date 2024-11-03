@@ -6,6 +6,7 @@
 #include "UObject/Interface.h"
 #include "PawnInterface.generated.h"
 
+class UCubeType;
 // This class does not need to be modified.
 UINTERFACE()
 class UPawnInterface : public UInterface
@@ -24,4 +25,7 @@ class GAME_API IPawnInterface
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Pawn_Init(UCubeType* Type, FVector Location);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FHitResult ReturnAactorUnderPawn(FCollisionQueryParams Collision); 
 };

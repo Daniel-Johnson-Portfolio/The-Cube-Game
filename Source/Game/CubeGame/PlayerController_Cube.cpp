@@ -160,6 +160,7 @@ void APlayerController_Cube::BeginPlay()
 			this->Possess(_PossessedPawn);
 			_CharacterArray.RemoveAt(0);
 			_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
+			OnPuzzleInformation.Broadcast(3,3,3);
 		}
 		
 	}

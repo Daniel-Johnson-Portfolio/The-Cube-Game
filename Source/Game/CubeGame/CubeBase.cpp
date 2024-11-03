@@ -146,6 +146,12 @@ void ACubeBase::ResetJumpCooldown()
 	bCanJump = true;
 }
 
+
+FHitResult ACubeBase::ReturnAactorUnderPawn_Implementation(FCollisionQueryParams Collision)
+{
+	return ACubeBase::DownwardTrace(_StaticMesh->GetComponentLocation(), _StaticMesh->GetComponentLocation() - FVector(0,0,20), Collision, _StaticMesh->GetComponentRotation().Quaternion(), ECC_Visibility);
+}
+
 FHitResult ACubeBase::DownwardTrace(FVector StartPos, FVector EndPos, FCollisionQueryParams CollisionParams, FQuat BoxRotation, ECollisionChannel TraceChannel)
 {
 	FHitResult HitResult;

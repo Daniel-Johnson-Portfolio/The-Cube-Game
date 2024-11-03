@@ -45,6 +45,7 @@ protected:
 
 	FVector _CubeExtents2D;
 
+	
 
 public:
 	virtual void Input_JumpPressed_Implementation() override;
@@ -54,7 +55,8 @@ public:
 	virtual void Input_AIMove_Implementation(FVector Pos) override;
 
 	virtual void Pawn_Init_Implementation(UCubeType* Type, FVector Location) override;
-	
+
+	virtual FHitResult ACubeBase::ReturnAactorUnderPawn_Implementation(FCollisionQueryParams Collision) override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

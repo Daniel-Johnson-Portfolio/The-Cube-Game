@@ -3,6 +3,9 @@
 
 #include "Puzzle_Stack.h"
 
+#include "Game/CubeGame/PawnInterface.h"
+#include "Kismet/KismetSystemLibrary.h"
+
 
 /*
 *Cube makes trace when it lands (Once each land) and ignores cube type
@@ -29,8 +32,9 @@ APuzzle_Stack::APuzzle_Stack()
 	_OverlapBox->SetBoxExtent(FVector(50,50,50));
 	_OverlapBox->SetupAttachment(_StaticMesh);
 
-	_OverlapBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &APuzzle_Stack::ScanForCubes);
-	
+	_OverlapBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &APuzzle_Stack::InterfaceToOverlappedActor);
+
+
 	_PlaneExtents2D = FVector(_StaticMesh->GetComponentScale().X * 50.0f, _StaticMesh->GetComponentScale().Y * 50.0f, 0.0f);
 }
 
@@ -39,6 +43,26 @@ void APuzzle_Stack::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void APuzzle_Stack::InterfaceToOverlappedActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	FHitResult TraceResults;
+	
+	if(UKismetSystemLibrary::DoesImplementInterface(OtherActor, UPawnInterface::StaticClass()))
+	{
+		OverlappedPawns.AddUnique(OtherActor);
+		FCollisionQueryParams Collision;
+		Collision.MobilityType(EQueryMobilityType::Static);
+		TraceResults = IPawnInterface::Execute_ReturnAactorUnderPawn(OtherActor, Collision);
+	
+		if(TraceResults.GetActor() == this)
+		{
+			
+
+			
+		}
+	}
 }
 
 // Called every frame

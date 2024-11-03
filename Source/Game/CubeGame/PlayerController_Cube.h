@@ -14,6 +14,9 @@ class ACubeBase;
 class UInputAction;
 struct FInputActionValue;
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FPuzzleInformationSignature, int, amountofCubes, float, CubeStackHeight, float, biggestCubeFace);
+
 UCLASS(Abstract)
 class GAME_API APlayerController_Cube : public APlayerController
 {
@@ -55,6 +58,9 @@ public:
 	
 	UFUNCTION()
 	void MoveAI(FVector pos);
+
+	UPROPERTY(BlueprintAssignable)
+	FPuzzleInformationSignature OnPuzzleInformation;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Cube Data")
 	UDataTable* _CubeDataTable;
