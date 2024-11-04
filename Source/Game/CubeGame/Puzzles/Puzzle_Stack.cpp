@@ -54,7 +54,7 @@ void APuzzle_Stack::InterfaceToOverlappedActor(UPrimitiveComponent* OverlappedCo
 		OverlappedPawns.AddUnique(OtherActor);
 		FCollisionQueryParams Collision;
 		Collision.MobilityType(EQueryMobilityType::Static);
-		TraceResults = IPawnInterface::Execute_ReturnAactorUnderPawn(OtherActor, Collision);
+		//TraceResults = IPawnInterface::Execute_ReturnActorUnderPawn(OtherActor, Collision);
 	
 		if(TraceResults.GetActor() == this)
 		{

@@ -6,6 +6,7 @@
 #include "Inputs.h"
 #include "PawnInterface.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/Character.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "CubeBase.generated.h"
@@ -15,7 +16,7 @@ class UCubeType;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPawnHasMovedSignature, FVector, Pos);
 
 UCLASS()
-class GAME_API ACubeBase : public APawn, public IInputs, public IPawnInterface
+class GAME_API ACubeBase : public ACharacter, public IInputs, public IPawnInterface
 {
 	//Changing to character may be an idea
 	GENERATED_BODY()
@@ -56,7 +57,7 @@ public:
 
 	virtual void Pawn_Init_Implementation(UCubeType* Type, FVector Location) override;
 
-	virtual FHitResult ACubeBase::ReturnAactorUnderPawn_Implementation(FCollisionQueryParams Collision) override;
+	//virtual FHitResult ACubeBase::ReturnAactorUnderPawn_Implementation(FCollisionQueryParams Collision) override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
