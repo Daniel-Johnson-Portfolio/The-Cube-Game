@@ -3,6 +3,7 @@
 
 #include "Puzzle_Stack.h"
 
+#include "SkeletalMeshAttributes.h"
 #include "Game/CubeGame/PawnInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -53,8 +54,8 @@ void APuzzle_Stack::InterfaceToOverlappedActor(UPrimitiveComponent* OverlappedCo
 	{
 		OverlappedPawns.AddUnique(OtherActor);
 		FCollisionQueryParams Collision;
-		Collision.MobilityType(EQueryMobilityType::Static);
-		//TraceResults = IPawnInterface::Execute_ReturnActorUnderPawn(OtherActor, Collision);
+		Collision.MobilityType = (EQueryMobilityType::Static);
+		TraceResults = IPawnInterface::Execute_ReturnActorUnderPawn(OtherActor, Collision);
 	
 		if(TraceResults.GetActor() == this)
 		{

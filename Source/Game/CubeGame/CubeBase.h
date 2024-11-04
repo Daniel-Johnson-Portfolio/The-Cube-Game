@@ -16,7 +16,7 @@ class UCubeType;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPawnHasMovedSignature, FVector, Pos);
 
 UCLASS()
-class GAME_API ACubeBase : public ACharacter, public IInputs, public IPawnInterface
+class GAME_API ACubeBase : public APawn, public IInputs, public IPawnInterface
 {
 	//Changing to character may be an idea
 	GENERATED_BODY()

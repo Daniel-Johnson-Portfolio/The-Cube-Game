@@ -14,6 +14,7 @@
 class UCubeType;
 // This class does not need to be modified.
 UINTERFACE()
+
 class UPawnInterface : public UInterface
 {
 	GENERATED_BODY()
@@ -24,14 +25,18 @@ class UPawnInterface : public UInterface
  */
 class GAME_API IPawnInterface
 {
+	
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	struct FHitResult;
+	struct FCollisionQueryParams;
+	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Pawn_Init(UCubeType* Type, FVector Location);
 
-	//UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-//	FHitResult ReturnActorUnderPawn(FCollisionQueryParams Collision); 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FHitResult ReturnActorUnderPawn(FName CollisionKey);
 	
 };

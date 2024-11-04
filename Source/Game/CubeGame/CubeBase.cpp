@@ -9,9 +9,9 @@ ACubeBase::ACubeBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	
-	
 	_StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	RootComponent = _StaticMesh;
+	
 	_SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	_SpringArm->SetupAttachment(_StaticMesh);
 	_SpringArm->SetRelativeLocation(FVector(-30, 0, 100));
@@ -20,6 +20,7 @@ ACubeBase::ACubeBase()
 	_Camera->SetupAttachment(_SpringArm);
 	
 	ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("/Game/SM_Cube"));
+	
 	_StaticMesh->SetStaticMesh(MeshObj.Object);
 
 	_StaticMesh->SetSimulatePhysics(true);
@@ -70,12 +71,12 @@ void ACubeBase::Input_Move_Implementation(FVector2D Value)
     FVector _MovementOffset = _MovementDirection * _Movementspeed * GetWorld()->GetDeltaSeconds();
 	_StaticMesh->AddWorldOffset((_MovementOffset));
 
-	OnMoved.Broadcast(this->GetActorLocation());
+	OnMoved.Broadcast(GetActorLocation());
 }
 
 void ACubeBase::Input_AIMove_Implementation(FVector TargetPosition)
 {
-	if(FVector::Dist(TargetPosition, GetActorLocation()) > 500.0f)
+	if(FVector::Dist(TargetPosition, GetActorLocation()) > 50.0f)
 	{
 		TargetPosition = TargetPosition + FMath::VRand() * FMath::RandRange(150.0f, 250.0f);
 		TargetPosition.Z = 0.0f;
