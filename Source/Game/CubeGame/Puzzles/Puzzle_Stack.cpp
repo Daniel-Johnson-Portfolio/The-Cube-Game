@@ -52,14 +52,15 @@ void APuzzle_Stack::InterfaceToOverlappedActor(UPrimitiveComponent* OverlappedCo
 	
 	if(UKismetSystemLibrary::DoesImplementInterface(OtherActor, UPawnInterface::StaticClass()))
 	{
-		OverlappedPawns.AddUnique(OtherActor);
+		_OverlappedPawns.AddUnique(OtherActor);
 		FCollisionQueryParams Collision;
 		Collision.MobilityType = (EQueryMobilityType::Static);
 		TraceResults = IPawnInterface::Execute_ReturnActorUnderPawn(OtherActor, Collision);
 	
 		if(TraceResults.GetActor() == this)
 		{
-			
+			//add cube to stack list
+			_StackedPawns.AddUnique(OtherActor);
 
 			
 		}
