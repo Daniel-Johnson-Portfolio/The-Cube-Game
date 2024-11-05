@@ -16,7 +16,11 @@ public:
 	// Sets default values for this actor's properties
 	APuzzle_Stack();
 
-
+private:
+	UPROPERTY(VisibleAnywhere, Category="Characters")
+	TMap<AActor*, FVector> InitialPositions;
+	FTimerHandle MovementCheckTimer;     
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -24,6 +28,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<UStaticMeshComponent> _StaticMesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	APlayerController* _PlayerController;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<UBoxComponent> _OverlapBox;
 	FVector _PlaneExtents2D;
@@ -38,12 +45,14 @@ protected:
 	TArray<AActor*> _StackedPawns;
 
 	UFUNCTION()
-	void InterfaceToOverlappedActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	void ComponentExit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	void ComponentEntered(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	
-	public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	void CheckForMovement();     
 };

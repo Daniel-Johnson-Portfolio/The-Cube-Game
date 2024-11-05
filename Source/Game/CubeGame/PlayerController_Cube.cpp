@@ -40,6 +40,7 @@ void APlayerController_Cube::Look(const FInputActionValue& Value)
 
 void APlayerController_Cube::Move(const FInputActionValue& Value)
 {
+	isMoving = true;
 	FVector2D MoveVector = Value.Get<FVector2D>();
 
 	if(APawn* currentPawn = GetPawn())
@@ -64,10 +65,10 @@ void APlayerController_Cube::JumpPressed()
 
 void APlayerController_Cube::SwapChar()
 {
-	_CharacterArray.Add(_PossessedPawn);
-	_PossessedPawn = _CharacterArray[0];
+	_NPCCharacterArray.Add(_PossessedPawn);
+	_PossessedPawn = _NPCCharacterArray[0];
 	this->Possess(_PossessedPawn);
-	_CharacterArray.RemoveAt(0);
+	_NPCCharacterArray.RemoveAt(0);
 	_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
 	
 }
@@ -127,7 +128,8 @@ void APlayerController_Cube::BeginPlay()
 				
 				if (Obj)
 				{
-					_CharacterArray.Add(Obj);
+					_NPCCharacterArray.Add(Obj);
+					_AllCharacterArray.Add(Obj);
 					if (Row->CubeDataAsset)
 					{
 						if(UKismetSystemLibrary::DoesImplementInterface(Obj, UPawnInterface::StaticClass()))
@@ -156,11 +158,11 @@ void APlayerController_Cube::BeginPlay()
 			}
 		}
 
-		if(!_CharacterArray.IsEmpty())
+		if(!_NPCCharacterArray.IsEmpty())
 		{
-			_PossessedPawn = _CharacterArray[0];
+			_PossessedPawn = _NPCCharacterArray[0];
 			this->Possess(_PossessedPawn);
-			_CharacterArray.RemoveAt(0);
+			_NPCCharacterArray.RemoveAt(0);
 			_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
 			OnPuzzleInformation.Broadcast(3,3,3);
 		}
@@ -181,9 +183,61 @@ void APlayerController_Cube::FindPlayerStart_Implementation()
 	}
 }
 
+void APlayerController_Cube::CubesOnPlatform_Implementation(int amount)
+{
+	if(amount == _AllCharacterArray.Num())
+	{
+		//Check1
+		
+		TMap<ACubeBase*, float> CharMap;
+		for (ACubeBase* character : _AllCharacterArray)
+		{
+			CharMap.Add(character, character->GetActorLocation().Z);
+			FString CharacterName = character->GetName();
+			UE_LOG(LogTemp, Display, TEXT("Character '%s' Z level %f"), *CharacterName , character->GetActorLocation().Z);
+		}
+
+		bool HasUniqueValues = true;
+		TSet<float> SeenValues;
+		for (const auto& Elem : CharMap)
+		{
+			ACubeBase* Key = Elem.Key;
+			float Value = Elem.Value;
+
+			for (float SeenValue : SeenValues)
+			{
+				// Check if SeenValue is within RangeThreshold of Value
+				if (FMath::Abs(SeenValue - Value) <= 1)
+				{
+					HasUniqueValues = false;
+					break;  // Exit the loop as soon as we find a near match
+				}
+			}
+
+			// If no near match is found, add the value to SeenValues
+			if (HasUniqueValues)
+			{
+				SeenValues.Add(Value);
+			}
+		}
+		//check2
+		if (HasUniqueValues && _PossessedPawn->bCanJump == true)
+		{
+			UE_LOG(LogTemp, Log, TEXT("All values are unique."));
+			
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Duplicate values found in CharMap."));
+		}
+		
+	}
+	
+}
+
 void APlayerController_Cube::MoveAI(FVector pos)
 {
-	for(ACubeBase* Char : _CharacterArray)
+	for(ACubeBase* Char : _NPCCharacterArray)
 	{
 		IInputs::Execute_Input_AIMove(Char, pos);
 	}

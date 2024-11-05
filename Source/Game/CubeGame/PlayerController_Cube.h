@@ -38,7 +38,9 @@ protected:
 	int _CurrentCharacter = 0;
 	
 	UPROPERTY(VisibleAnywhere, Category="Characters")
-	TArray<ACubeBase*> _CharacterArray;
+	TArray<ACubeBase*> _NPCCharacterArray; //List of all characters that the play isn't currently controlling
+	UPROPERTY(VisibleAnywhere, Category="Characters")
+	TArray<ACubeBase*> _AllCharacterArray; //List is of all characters and does not change after begin play when they are instanced
 
 	UPROPERTY(EditAnywhere, Category="Characters")
 	TSubclassOf<ACubeBase> _CubeBase;
@@ -46,6 +48,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Characters")
 	TArray<TObjectPtr<AActor>> _PlayerStarts;
 
+	UPROPERTY(VisibleAnywhere, Category="Inputs")
+	bool isMoving;
 	
 	virtual void SetupInputComponent() override;
 
@@ -59,6 +63,8 @@ protected:
 
 public:
 	void FindPlayerStart_Implementation();
+
+	virtual void CubesOnPlatform_Implementation(int Amount); 
 	
 	UFUNCTION()
 	void MoveAI(FVector pos);

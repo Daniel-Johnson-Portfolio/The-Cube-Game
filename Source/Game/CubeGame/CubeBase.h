@@ -49,6 +49,8 @@ protected:
 	
 
 public:
+	bool bIsGrounded = false;
+	bool bCanJump = true;
 	virtual void Input_JumpPressed_Implementation() override;
 	virtual void Input_Look_Implementation(FVector2D Value) override;
 	virtual void Input_Move_Implementation(FVector2D Value) override;
@@ -68,9 +70,7 @@ public:
 	UCubeType* _CubeType;
 
 private:
-	bool bIsGrounded = false;
-	bool bCanJump = true;
-	float JumpCooldown = 0.5f;               
+	float JumpCooldown = 1.25f;               
 	FTimerHandle TimerHandle_JumpCooldown;
 
 	void CheckIfGrounded();

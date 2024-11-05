@@ -8,6 +8,7 @@
 #include "CADKernel/UI/Display.h"
 #include "Game/CubeGame/CubeBase.h"
 #include "Game/CubeGame/PawnInterface.h"
+#include "Game/CubeGame/PlayerControllerInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -24,7 +25,6 @@ if none of them are the same level and all of them are present then condition co
 // Sets default values
 APuzzle_Stack::APuzzle_Stack()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	_StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
@@ -35,9 +35,10 @@ APuzzle_Stack::APuzzle_Stack()
 	_OverlapBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Overlap Box"));
 	_OverlapBox->SetBoxExtent(FVector(50,50,50));
 	_OverlapBox->SetupAttachment(_StaticMesh);
-
+	
 	_OverlapBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &APuzzle_Stack::ComponentEntered);
-
+	_OverlapBox->OnComponentEndOverlap.AddUniqueDynamic(this, &APuzzle_Stack::ComponentExit);
+	
 	_StaticMesh->SetMobility(EComponentMobility::Static);
 	_OverlapBox->SetMobility(EComponentMobility::Static);
 	_PlaneExtents2D = FVector(_StaticMesh->GetComponentScale().X * 50.0f, _StaticMesh->GetComponentScale().Y * 50.0f, 0.0f);
@@ -47,31 +48,69 @@ APuzzle_Stack::APuzzle_Stack()
 void APuzzle_Stack::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	_PlayerController = GetWorld()->GetFirstPlayerController();
 }
 
-
-
-
-void APuzzle_Stack::InterfaceToOverlappedActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
-	UE_LOG(LogTemp, Display, TEXT("PreInterface"));
-	if(UKismetSystemLibrary::DoesImplementInterface(OtherActor, UPawnInterface::StaticClass()))
-	{
-	
-	}
-}
 
 void APuzzle_Stack::ComponentEntered(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if(UKismetSystemLibrary::DoesImplementInterface(OtherActor, UPawnInterface::StaticClass()))
+	if (UKismetSystemLibrary::DoesImplementInterface(OtherActor, UPawnInterface::StaticClass()) && UKismetSystemLibrary::DoesImplementInterface(_PlayerController, UPlayerControllerInterface::StaticClass()))
 	{
 		_CubesOverlapped++;
 		_OverlappedPawns.AddUnique(OtherActor);
-		
-		
+        
+		// Store the initial position of the actor
+		InitialPositions.Add(OtherActor, OtherActor->GetActorLocation());
+
+		// Start the timer to check for movement if it hasn't started
+		if (!GetWorld()->GetTimerManager().IsTimerActive(MovementCheckTimer))
+		{
+			GetWorld()->GetTimerManager().SetTimer(MovementCheckTimer, this, &APuzzle_Stack::CheckForMovement, 2.0f, true);  // Check every 2 seconds
+		}
+
+		IPlayerControllerInterface::Execute_CubesOnPlatform(_PlayerController, _CubesOverlapped);
 	}
 }
+
+void APuzzle_Stack::CheckForMovement()
+{
+	bool bAnyObjectMoved = false;
+
+	for (auto& Elem : InitialPositions)
+	{
+		AActor* Actor = Elem.Key;
+		FVector InitialPosition = Elem.Value;
+        
+		// Check if the actor is still valid and has moved
+		if (Actor && Actor->GetActorLocation() != InitialPosition)
+		{
+			bAnyObjectMoved = true;
+			UE_LOG(LogTemp, Warning, TEXT("%s has moved!"), *Actor->GetName());
+			
+			// Optionally update the position if you want to detect further movement
+			InitialPositions[Actor] = Actor->GetActorLocation();
+		}
+	}
+
+	if (!bAnyObjectMoved)
+	{
+		UE_LOG(LogTemp, Log, TEXT("No objects have moved."));
+	}
+	
+	IPlayerControllerInterface::Execute_CubesOnPlatform(_PlayerController, _CubesOverlapped);
+}
+
+void APuzzle_Stack::ComponentExit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if(UKismetSystemLibrary::DoesImplementInterface(OtherActor, UPawnInterface::StaticClass()) && UKismetSystemLibrary::DoesImplementInterface(_PlayerController, UPlayerControllerInterface::StaticClass()))
+	{
+		_CubesOverlapped--;
+		_OverlappedPawns.Remove(OtherActor);
+		InitialPositions.Remove(OtherActor);
+		IPlayerControllerInterface::Execute_CubesOnPlatform(_PlayerController, _CubesOverlapped);
+	}
+}
+
 
 // Called every frame
 void APuzzle_Stack::Tick(float DeltaTime)

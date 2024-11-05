@@ -78,7 +78,7 @@ void ACubeBase::Input_Move_Implementation(FVector2D Value)
 
 void ACubeBase::Input_AIMove_Implementation(FVector TargetPosition)
 {
-	if(FVector::Dist(TargetPosition, GetActorLocation()) > 50.0f)
+	if(FVector::Dist(TargetPosition, GetActorLocation()) > 500.0f)
 	{
 		TargetPosition = TargetPosition + FMath::VRand() * FMath::RandRange(150.0f, 250.0f);
 		TargetPosition.Z = 0.0f;
