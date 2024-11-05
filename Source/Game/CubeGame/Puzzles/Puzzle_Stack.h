@@ -27,15 +27,21 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<UBoxComponent> _OverlapBox;
 	FVector _PlaneExtents2D;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Puzzle")
+	int _CubesOverlapped;
 
 	UPROPERTY()
 	TArray<AActor*> _OverlappedPawns;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Puzzle")
 	TArray<AActor*> _StackedPawns;
 
 	UFUNCTION()
 	void InterfaceToOverlappedActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION()
+	void ComponentEntered(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	
 	public:
 	// Called every frame

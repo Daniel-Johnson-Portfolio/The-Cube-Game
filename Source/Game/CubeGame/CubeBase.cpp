@@ -4,6 +4,7 @@
 #include "CubeBase.h"
 #include "CubeType.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 ACubeBase::ACubeBase()
 {
@@ -50,6 +51,7 @@ void ACubeBase::Input_JumpPressed_Implementation()
 		//make cool down UI
 	}
 }
+
 
 void ACubeBase::Input_Look_Implementation(FVector2D Value)
 {
@@ -148,10 +150,13 @@ void ACubeBase::ResetJumpCooldown()
 }
 
 
-//FHitResult ACubeBase::ReturnAactorUnderPawn_Implementation(FCollisionQueryParams Collision)
-//{
-//	return ACubeBase::DownwardTrace(_StaticMesh->GetComponentLocation(), _StaticMesh->GetComponentLocation() - FVector(0,0,20), Collision, _StaticMesh->GetComponentRotation().Quaternion(), ECC_Visibility);
-//}
+FHitResult ACubeBase::ReturnActorUnderPawn_Implementation()
+{
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this);
+	CollisionParams.MobilityType = EQueryMobilityType::Static;
+	return ACubeBase::DownwardTrace(_StaticMesh->GetComponentLocation(), _StaticMesh->GetComponentLocation() - FVector(0,0,20), CollisionParams, _StaticMesh->GetComponentRotation().Quaternion(), ECC_Visibility);
+}
 
 FHitResult ACubeBase::DownwardTrace(FVector StartPos, FVector EndPos, FCollisionQueryParams CollisionParams, FQuat BoxRotation, ECollisionChannel TraceChannel)
 {
@@ -167,7 +172,6 @@ FHitResult ACubeBase::DownwardTrace(FVector StartPos, FVector EndPos, FCollision
 			FCollisionShape::MakeBox(_CubeExtents2D),  
 			CollisionParams
 		);
-	
 	DrawDebugBox(GetWorld(), HitResult.Location, _CubeExtents2D, BoxRotation, FColor::Green, false, 5, 0, 1);
 	return HitResult;
 }

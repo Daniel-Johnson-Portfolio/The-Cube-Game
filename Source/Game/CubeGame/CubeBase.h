@@ -15,7 +15,7 @@ class UCubeType;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPawnHasMovedSignature, FVector, Pos);
 
-UCLASS()
+UCLASS(Abstract)
 class GAME_API ACubeBase : public APawn, public IInputs, public IPawnInterface
 {
 	//Changing to character may be an idea
@@ -57,7 +57,7 @@ public:
 
 	virtual void Pawn_Init_Implementation(UCubeType* Type, FVector Location) override;
 
-	//virtual FHitResult ACubeBase::ReturnAactorUnderPawn_Implementation(FCollisionQueryParams Collision) override;
+	virtual FHitResult ReturnActorUnderPawn_Implementation() override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

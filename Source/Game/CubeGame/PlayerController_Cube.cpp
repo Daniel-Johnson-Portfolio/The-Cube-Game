@@ -121,8 +121,10 @@ void APlayerController_Cube::BeginPlay()
 					_RandomPoint = FVector(10,10,10);
 					UE_LOG(LogTemp, Warning, TEXT("Failed to find player start, Spawning at 10,10,10"));
 				}
+
 				
-				ACubeBase* Obj = GetWorld()->SpawnActor<ACubeBase>(ACubeBase::StaticClass(), FVector(), FRotator::ZeroRotator, _ActorSpawnParameters);
+				ACubeBase* Obj = GetWorld()->SpawnActor<ACubeBase>(_CubeBase, FVector(), FRotator::ZeroRotator, _ActorSpawnParameters);
+				
 				if (Obj)
 				{
 					_CharacterArray.Add(Obj);

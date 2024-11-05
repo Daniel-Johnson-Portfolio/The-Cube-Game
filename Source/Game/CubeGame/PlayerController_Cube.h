@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedInputSubsystems.h"
+#include "PlayerControllerInterface.h"
 #include "GameFramework/PlayerController.h"
 #include "PlayerController_Cube.generated.h"
 
@@ -18,7 +19,7 @@ struct FInputActionValue;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FPuzzleInformationSignature, int, amountofCubes, float, CubeStackHeight, float, biggestCubeFace);
 
 UCLASS(Abstract)
-class GAME_API APlayerController_Cube : public APlayerController
+class GAME_API APlayerController_Cube : public APlayerController, public IPlayerControllerInterface
 {
 	GENERATED_BODY()
 
@@ -38,6 +39,9 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category="Characters")
 	TArray<ACubeBase*> _CharacterArray;
+
+	UPROPERTY(EditAnywhere, Category="Characters")
+	TSubclassOf<ACubeBase> _CubeBase;
 
 	UPROPERTY(VisibleAnywhere, Category="Characters")
 	TArray<TObjectPtr<AActor>> _PlayerStarts;
