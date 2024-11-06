@@ -192,7 +192,7 @@ void APlayerController_Cube::CubesOnPlatform_Implementation(int amount)
 		TMap<ACubeBase*, float> CharMap;
 		for (ACubeBase* character : _AllCharacterArray)
 		{
-			CharMap.Add(character, character->GetActorLocation().Z);
+			CharMap.Add(character, character->_StaticMesh->GetComponentLocation().Z);
 			FString CharacterName = character->GetName();
 			UE_LOG(LogTemp, Display, TEXT("Character '%s' Z level %f"), *CharacterName , character->GetActorLocation().Z);
 		}
