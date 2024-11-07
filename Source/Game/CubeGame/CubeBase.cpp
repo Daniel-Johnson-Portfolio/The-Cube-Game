@@ -11,6 +11,14 @@ ACubeBase::ACubeBase()
 	PrimaryActorTick.bCanEverTick = false;
 	
 	_StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
+	_BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
+	
+	_BoxCollider->SetBoxExtent(FVector(50,50,50));
+	_BoxCollider->SetupAttachment(RootComponent);
+
+	_StaticMesh->SetupAttachment(_BoxCollider);
+
+	_StaticMesh->SetRelativeLocation(RootComponent->GetRelativeLocation());
 	
 	_SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	_SpringArm->SetupAttachment(_StaticMesh);
@@ -23,7 +31,7 @@ ACubeBase::ACubeBase()
 	
 	_StaticMesh->SetStaticMesh(MeshObj.Object);
 
-	_StaticMesh->SetSimulatePhysics(true);
+	//_StaticMesh->SetSimulatePhysics(true);
 	
 	_StaticMesh->BodyInstance.bLockXRotation = true;
 	_StaticMesh->BodyInstance.bLockYRotation = true;
@@ -37,18 +45,7 @@ void ACubeBase::BeginPlay()
 }
 void ACubeBase::Input_JumpPressed_Implementation()
 {
-	if (bCanJump) 
-	{
-		bCanJump = false;
-		CheckIfGrounded();
-		if (bIsGrounded)
-		{
-			_StaticMesh->AddImpulse(FVector(0, 0, 75000));
-			bIsGrounded = false;
-		}
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle_JumpCooldown, this, &ACubeBase::ResetJumpCooldown, JumpCooldown, false);
-		//make cool down UI
-	}
+	ACharacter::Jump();
 }
 
 
@@ -70,13 +67,14 @@ void ACubeBase::Input_Move_Implementation(FVector2D Value)
     FVector _MovementDirection = (_ForwardVector * Value.Y + _RightVector * Value.X).GetSafeNormal();
 	
     FVector _MovementOffset = _MovementDirection * _Movementspeed * GetWorld()->GetDeltaSeconds();
-	_StaticMesh->AddWorldOffset((_MovementOffset));
+	RootComponent->AddWorldOffset(_MovementOffset);
 
 	OnMoved.Broadcast(GetActorLocation());
 }
 
 void ACubeBase::Input_AIMove_Implementation(FVector TargetPosition)
 {
+	/*
 	if(FVector::Dist(TargetPosition, GetActorLocation()) > 50.0f)
 	{
 		TargetPosition = TargetPosition + FMath::VRand() * FMath::RandRange(150.0f, 250.0f);
@@ -89,6 +87,7 @@ void ACubeBase::Input_AIMove_Implementation(FVector TargetPosition)
 		FVector NewLocation = FMath::VInterpTo(CurrentLocation, TargetPosition, DeltaTime, InterpSpeed);
 		SetActorLocation(NewLocation);
 	}
+	*/
 }
 
 void ACubeBase::Pawn_Init_Implementation(UCubeType* Type, FVector Location)
@@ -101,8 +100,9 @@ void ACubeBase::Pawn_Init_Implementation(UCubeType* Type, FVector Location)
 	FTransform NewTransform;
 	NewTransform.SetScale3D(Type->_CubeSize);
 	NewTransform.SetLocation(Location);
-	_StaticMesh->SetRelativeTransform(NewTransform);
-
+	RootComponent->SetRelativeTransform(NewTransform);
+	_StaticMesh->AddLocalOffset(FVector(0,0,-50.0f));
+	
 	_CubeExtents2D = FVector(_StaticMesh->GetComponentScale().X * 50.0f, _StaticMesh->GetComponentScale().Y * 50.0f, 0.0f);
 }
 

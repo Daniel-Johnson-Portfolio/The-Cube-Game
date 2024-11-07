@@ -24,6 +24,8 @@ void AAIController_Cube::BeginPlay()
 
 void AAIController_Cube::OnPossess(APawn* InPawn)
 {
+	RunBehaviorTree(_BehaviourTree);
+	UE_LOG(LogTemp, Warning, TEXT("TREE RUN"));
 	Super::OnPossess(InPawn);
 	
 }
@@ -32,6 +34,6 @@ void AAIController_Cube::OnPossess(APawn* InPawn)
 void AAIController_Cube::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	this->MoveToLocation(_CurrentlyActivePawn->GetActorLocation(), 5, true, true);
+	
 }
 

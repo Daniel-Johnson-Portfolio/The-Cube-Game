@@ -29,6 +29,9 @@ public:
 	FPawnHasMovedSignature OnMoved;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<UStaticMeshComponent> _StaticMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TObjectPtr<UBoxComponent> _BoxCollider;
 	
 protected:
 	// Called when the game starts or when spawned

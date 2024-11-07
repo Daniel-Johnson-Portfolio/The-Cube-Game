@@ -106,8 +106,9 @@ void APlayerController_Cube::BeginPlay()
 		
 		FActorSpawnParameters _ActorSpawnParameters;
 		_ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		
 
-		float _SpawnRadius = (DataRows.Num() * 100.0f);
+		float _SpawnRadius = (DataRows.Num() * 500.0f);
 		FVector _RandomPoint;
 		for (FCubeDataRow* Row : DataRows)
 		{
@@ -126,15 +127,19 @@ void APlayerController_Cube::BeginPlay()
 				
 				ACubeBase* Obj = GetWorld()->SpawnActor<ACubeBase>(_CubeBase, FVector(), FRotator::ZeroRotator, _ActorSpawnParameters);
 				
-				if (Obj)
+				AAIController_Cube* AiController = GetWorld()->SpawnActor<AAIController_Cube>(_AiController);
+
+				
+				if (Obj && AiController)
 				{
 					_NPCCharacterArray.Add(Obj);
 					_AllCharacterArray.Add(Obj);
+					_AiControllers.Add(AiController);
 					if (Row->CubeDataAsset)
 					{
 						if(UKismetSystemLibrary::DoesImplementInterface(Obj, UPawnInterface::StaticClass()))
 						{
-							IPawnInterface::Execute_Pawn_Init(Obj, Row->CubeDataAsset, FVector(_RandomPoint.X, _RandomPoint.Y, 10.0f));
+							IPawnInterface::Execute_Pawn_Init(Obj, Row->CubeDataAsset, FVector(_RandomPoint.X, _RandomPoint.Y, 0));
 						}
 						
 					}
@@ -160,10 +165,16 @@ void APlayerController_Cube::BeginPlay()
 
 		if(!_NPCCharacterArray.IsEmpty())
 		{
+			int CharIndex = 0;
+			for(AAIController_Cube* AiController : _AiControllers)
+			{
+				AiController->Possess(_NPCCharacterArray[CharIndex]);
+				CharIndex++;
+			}
 			_PossessedPawn = _NPCCharacterArray[0];
 			this->Possess(_PossessedPawn);
 			_NPCCharacterArray.RemoveAt(0);
-			_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
+			//_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
 			OnPuzzleInformation.Broadcast(3,3,3);
 		}
 		

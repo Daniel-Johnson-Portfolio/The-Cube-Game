@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AIController_Cube.h"
 #include "EnhancedInputSubsystems.h"
 #include "PlayerControllerInterface.h"
 #include "GameFramework/PlayerController.h"
@@ -50,6 +51,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category="Inputs")
 	bool isMoving;
+
+	UPROPERTY(VisibleAnywhere, Category="Characters")
+	TArray<AAIController_Cube*> _AiControllers;
+	
+	UPROPERTY(EditAnywhere, Category="Characters")
+	TSubclassOf<AAIController_Cube> _AiController;
+	
 	
 	virtual void SetupInputComponent() override;
 
