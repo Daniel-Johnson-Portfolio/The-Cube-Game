@@ -66,10 +66,25 @@ void APlayerController_Cube::JumpPressed()
 void APlayerController_Cube::SwapChar()
 {
 	_NPCCharacterArray.Add(_PossessedPawn);
+	
+	int CharIndex = 0;
+	for(AAIController_Cube* AiController : _AiControllers)
+	{
+		AiController->Possess(_NPCCharacterArray[CharIndex]);
+		CharIndex++;
+	}
+	
 	_PossessedPawn = _NPCCharacterArray[0];
 	this->Possess(_PossessedPawn);
 	_NPCCharacterArray.RemoveAt(0);
 	_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
+
+	for (AAIController_Cube* con : _AiControllers)
+	{
+		con->_CurrentlyActivePawn = _PossessedPawn;
+	}
+	
+	
 	
 }
 
@@ -127,7 +142,7 @@ void APlayerController_Cube::BeginPlay()
 				
 				ACubeBase* Obj = GetWorld()->SpawnActor<ACubeBase>(_CubeBase, FVector(), FRotator::ZeroRotator, _ActorSpawnParameters);
 				
-				AAIController_Cube* AiController = GetWorld()->SpawnActor<AAIController_Cube>(_AiController);
+				AAIController_Cube* AiController = GetWorld()->SpawnActor<AAIController_Cube>(_AiControllerBluePrint);
 
 				
 				if (Obj && AiController)
@@ -174,8 +189,13 @@ void APlayerController_Cube::BeginPlay()
 			_PossessedPawn = _NPCCharacterArray[0];
 			this->Possess(_PossessedPawn);
 			_NPCCharacterArray.RemoveAt(0);
-			//_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
+			_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
 			OnPuzzleInformation.Broadcast(3,3,3);
+			for (AAIController_Cube* con : _AiControllers)
+			{
+				con->_CurrentlyActivePawn = _PossessedPawn;
+				
+			}
 		}
 		
 	}

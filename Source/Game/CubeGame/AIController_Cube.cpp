@@ -15,18 +15,22 @@ AAIController_Cube::AAIController_Cube()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+ACubeBase* AAIController_Cube::newPawn_Implementation()
+{
+	return _CurrentlyActivePawn;
+}
+
 // Called when the game starts or when spawned
 void AAIController_Cube::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AAIController_Cube::OnPossess(APawn* InPawn)
 {
+	Super::OnPossess(InPawn);
 	RunBehaviorTree(_BehaviourTree);
 	UE_LOG(LogTemp, Warning, TEXT("TREE RUN"));
-	Super::OnPossess(InPawn);
 	
 }
 

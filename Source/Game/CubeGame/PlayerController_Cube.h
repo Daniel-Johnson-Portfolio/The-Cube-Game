@@ -56,7 +56,7 @@ protected:
 	TArray<AAIController_Cube*> _AiControllers;
 	
 	UPROPERTY(EditAnywhere, Category="Characters")
-	TSubclassOf<AAIController_Cube> _AiController;
+	TSubclassOf<AAIController_Cube> _AiControllerBluePrint;
 	
 	
 	virtual void SetupInputComponent() override;
@@ -77,6 +77,9 @@ public:
 	UFUNCTION()
 	void MoveAI(FVector pos);
 
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Characters")
+//	AAIController_Cube* _AiController;
+	
 	UPROPERTY(BlueprintAssignable)
 	FPuzzleInformationSignature OnPuzzleInformation;
 	

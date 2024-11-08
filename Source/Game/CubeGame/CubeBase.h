@@ -16,7 +16,7 @@ class UCubeType;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPawnHasMovedSignature, FVector, Pos);
 
 UCLASS(Abstract)
-class GAME_API ACubeBase : public ACharacter ,public IInputs, public IPawnInterface
+class GAME_API ACubeBase : public APawn ,public IInputs, public IPawnInterface
 {
 	//Changing to character may be an idea
 	GENERATED_BODY()
@@ -30,8 +30,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<UStaticMeshComponent> _StaticMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TObjectPtr<UBoxComponent> _BoxCollider;
+	
 	
 protected:
 	// Called when the game starts or when spawned
