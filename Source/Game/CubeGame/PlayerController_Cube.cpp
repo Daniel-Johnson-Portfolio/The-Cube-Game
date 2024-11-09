@@ -145,6 +145,7 @@ void APlayerController_Cube::BeginPlay()
 				AAIController_Cube* AiController = GetWorld()->SpawnActor<AAIController_Cube>(_AiControllerBluePrint);
 
 				
+				
 				if (Obj && AiController)
 				{
 					_NPCCharacterArray.Add(Obj);
@@ -255,7 +256,7 @@ void APlayerController_Cube::CubesOnPlatform_Implementation(int amount)
 		if (HasUniqueValues && _PossessedPawn->bCanJump == true)
 		{
 			UE_LOG(LogTemp, Log, TEXT("All values are unique."));
-			
+			OnStacked.Broadcast();
 		}
 		else
 		{

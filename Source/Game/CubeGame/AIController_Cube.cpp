@@ -30,8 +30,6 @@ void AAIController_Cube::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 	RunBehaviorTree(_BehaviourTree);
-	UE_LOG(LogTemp, Warning, TEXT("TREE RUN"));
-	
 }
 
 // Called every frame

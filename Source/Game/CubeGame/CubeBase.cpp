@@ -21,10 +21,6 @@ ACubeBase::ACubeBase()
 	
 	_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	_Camera->SetupAttachment(_SpringArm);
-	
-	ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("/Game/SM_Cube"));
-	
-	_StaticMesh->SetStaticMesh(MeshObj.Object);
 
 	_StaticMesh->SetSimulatePhysics(true);
 	
@@ -104,6 +100,7 @@ void ACubeBase::Pawn_Init_Implementation(UCubeType* Type, FVector Location)
 	_StaticMesh->SetMassOverrideInKg(FName(NAME_None),Type->_CubeMass, true);
 	
 	IPawnInterface::Pawn_Init_Implementation(Type, Location);
+	_StaticMesh->SetStaticMesh(Type->_CubeMesh);
 	_StaticMesh->SetMaterial(0, Type->_CubeMaterial);
 	
 	FTransform NewTransform;

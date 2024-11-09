@@ -20,9 +20,14 @@ public:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;
 
+	virtual void BeginPlay() override;
+
 protected:
 	TArray<TObjectPtr<AActor>> _PlayerStarts;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<TObjectPtr<AController>> _PlayerControllers;
+
+	UFUNCTION()
+	void CubesStacked();
 };

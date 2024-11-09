@@ -19,6 +19,8 @@ struct FInputActionValue;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FPuzzleInformationSignature, int, amountofCubes, float, CubeStackHeight, float, biggestCubeFace);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCubesStackedSignature);
+
 UCLASS(Abstract)
 class GAME_API APlayerController_Cube : public APlayerController, public IPlayerControllerInterface
 {
@@ -76,6 +78,10 @@ public:
 	
 	UFUNCTION()
 	void MoveAI(FVector pos);
+
+	UPROPERTY(BlueprintAssignable)
+	FCubesStackedSignature OnStacked;
+	
 
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Characters")
 //	AAIController_Cube* _AiController;

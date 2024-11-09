@@ -2,26 +2,13 @@
 
 
 #include "CubeGamemode.h"
+
+#include "PlayerControllerInterface.h"
+#include "PlayerController_Cube.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 
-AActor* ACubeGamemode::FindPlayerStart_Implementation(AController* Player, const FString& IncomingName)
-{
-	if(_PlayerStarts.Num() == 0)
-	{
-		TArray<AActor*> foundActors;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), foundActors);
-		for(AActor* actor : foundActors)
-		{
-			_PlayerStarts.Add(actor);
-		}
-	}
-	if(_PlayerStarts.Num() > 0)
-	{
-		return _PlayerStarts[FMath::RandRange(0, _PlayerStarts.Num()-1)];
-	}
-	return nullptr;
-}
+
 
 void ACubeGamemode::PostLogin(APlayerController* NewPlayer)
 {
@@ -33,4 +20,21 @@ void ACubeGamemode::Logout(AController* Exiting)
 {
 	_PlayerControllers.Remove(Exiting);
 	Super::Logout(Exiting);
+}
+
+void ACubeGamemode::BeginPlay()
+{
+	if(UKismetSystemLibrary::DoesImplementInterface(GetWorld()->GetFirstPlayerController(), UPlayerControllerInterface::StaticClass()))
+	{
+		Cast<APlayerController_Cube>(GetWorld()->GetFirstPlayerController())->OnStacked.AddUniqueDynamic(this, &ACubeGamemode::CubesStacked);
+
+		
+	}
+
+	Super::BeginPlay();
+}
+
+void ACubeGamemode::CubesStacked()
+{
+	UE_LOG(LogTemp, Warning, TEXT("CUBES STACKED"));
 }
