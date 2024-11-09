@@ -13,4 +13,10 @@ UCLASS()
 class GAME_API ULevelCompletedWidget : public UWidget_Hud
 {
 	GENERATED_BODY()
+public:
+	virtual void NativeConstruct() override;
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UTextBlock> _WinText;
 };
