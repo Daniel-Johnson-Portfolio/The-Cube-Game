@@ -18,10 +18,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="PlayerController")
 	ACubeBase* _CurrentlyActivePawn;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="PlayerController")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="PlayerController")
 	UBehaviorTree* _BehaviourTree;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="PlayerController")
+	UBlackboardComponent* _BlackboardComponent;
+
+	UPROPERTY()
+	bool bIsPaused = false;
+
+	
+
 	ACubeBase* newPawn_Implementation();
+
+	void PuaseBehaviorTree();
 
 protected:
 	// Called when the game starts or when spawned

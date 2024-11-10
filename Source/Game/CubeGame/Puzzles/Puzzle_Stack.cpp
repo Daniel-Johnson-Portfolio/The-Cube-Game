@@ -9,6 +9,7 @@
 #include "Game/CubeGame/CubeBase.h"
 #include "Game/CubeGame/PawnInterface.h"
 #include "Game/CubeGame/PlayerControllerInterface.h"
+#include "Game/CubeGame/PlayerController_Cube.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -27,21 +28,22 @@ APuzzle_Stack::APuzzle_Stack()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	_StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
-	RootComponent = _StaticMesh;
-	ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("/Game/SM_Plane"));
-	_StaticMesh->SetStaticMesh(MeshObj.Object);
+	_StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
+	RootComponent = _StaticMeshComponent;
+	;
+	_StaticMeshComponent->SetStaticMesh(_StaticMesh);
 
 	_OverlapBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Overlap Box"));
 	_OverlapBox->SetBoxExtent(FVector(50,50,50));
-	_OverlapBox->SetupAttachment(_StaticMesh);
+	_OverlapBox->SetupAttachment(_StaticMeshComponent);
 	
 	_OverlapBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &APuzzle_Stack::ComponentEntered);
 	_OverlapBox->OnComponentEndOverlap.AddUniqueDynamic(this, &APuzzle_Stack::ComponentExit);
 	
-	_StaticMesh->SetMobility(EComponentMobility::Static);
+	_StaticMeshComponent->SetMobility(EComponentMobility::Static);
 	_OverlapBox->SetMobility(EComponentMobility::Static);
-	_PlaneExtents2D = FVector(_StaticMesh->GetComponentScale().X * 50.0f, _StaticMesh->GetComponentScale().Y * 50.0f, 0.0f);
+	//_PlaneExtents2D = FVector(_StaticMeshComponent->GetComponentScale().X * 50.0f, _StaticMeshComponent->GetComponentScale().Y * 50.0f, 0.0f);
+	
 }
 
 // Called when the game starts or when spawned
@@ -49,6 +51,12 @@ void APuzzle_Stack::BeginPlay()
 {
 	Super::BeginPlay();
 	_PlayerController = GetWorld()->GetFirstPlayerController();
+
+	
+	if(UKismetSystemLibrary::DoesImplementInterface(_PlayerController, UPlayerControllerInterface::StaticClass()))
+	{
+		Cast<APlayerController_Cube>(_PlayerController)->OnPlayerControllerReady.AddUniqueDynamic(this, &APuzzle_Stack::Init);
+	}
 }
 
 
@@ -99,6 +107,14 @@ void APuzzle_Stack::CheckForMovement()
 	
 	IPlayerControllerInterface::Execute_CubesOnPlatform(_PlayerController, _CubesOverlapped);
 }
+
+void APuzzle_Stack::Init()
+{
+	FVector Box = (IPlayerControllerInterface::Execute_GetCombineCubeSize(_PlayerController));
+	_StaticMeshComponent->SetWorldScale3D(FVector(Box.X/50.0f, Box.Y/50.0f, Box.Z/50.0f)); //Scaling Down from extents to scale
+	
+}
+
 
 void APuzzle_Stack::ComponentExit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {

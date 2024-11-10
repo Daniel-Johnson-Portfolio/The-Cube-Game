@@ -76,24 +76,6 @@ void ACubeBase::Input_Move_Implementation(FVector2D Value)
 	
 }
 
-void ACubeBase::Input_AIMove_Implementation(FVector TargetPosition)
-{
-	/*
-	if(FVector::Dist(TargetPosition, GetActorLocation()) > 50.0f)
-	{
-		TargetPosition = TargetPosition + FMath::VRand() * FMath::RandRange(150.0f, 250.0f);
-		TargetPosition.Z = 0.0f;
-		FVector CurrentLocation = GetActorLocation();
-	
-		float DeltaTime = GetWorld()->GetDeltaSeconds();
-		float InterpSpeed = 0.5f;
-
-		FVector NewLocation = FMath::VInterpTo(CurrentLocation, TargetPosition, DeltaTime, InterpSpeed);
-		SetActorLocation(NewLocation);
-	}
-	*/
-	
-}
 
 void ACubeBase::Pawn_Init_Implementation(UCubeType* Type, FVector Location)
 {
@@ -109,6 +91,7 @@ void ACubeBase::Pawn_Init_Implementation(UCubeType* Type, FVector Location)
 	RootComponent->SetRelativeTransform(NewTransform);
 	
 	_CubeExtents2D = FVector(_StaticMesh->GetComponentScale().X * 50.0f, _StaticMesh->GetComponentScale().Y * 50.0f, 0.0f);
+	_CubeExtents3D = FVector(_StaticMesh->GetComponentScale().X * 50.0f, _StaticMesh->GetComponentScale().Y * 50.0f, _StaticMesh->GetComponentScale().Z * 50.0f);
 }
 
 

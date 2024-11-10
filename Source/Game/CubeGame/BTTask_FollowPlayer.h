@@ -28,6 +28,9 @@ public:
 	APawn* _AIPawn;
 
 	UPROPERTY()
+	bool isPaused = false;
+
+	UPROPERTY()
 	bool bInRange;
 	
 };

@@ -49,6 +49,7 @@ protected:
 
 	FVector _CubeExtents2D;
 
+
 	
 
 public:
@@ -58,7 +59,6 @@ public:
 	virtual void Input_Look_Implementation(FVector2D Value) override;
 	virtual void Input_Move_Implementation(FVector2D Value) override;
 	
-	virtual void Input_AIMove_Implementation(FVector Pos) override;
 
 	virtual void Pawn_Init_Implementation(UCubeType* Type, FVector Location) override;
 
@@ -71,6 +71,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character")
 	UCubeType* _CubeType;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Character")
+	FVector _CubeExtents3D;
 
 private:
 	float JumpCooldown = 1.25f;               

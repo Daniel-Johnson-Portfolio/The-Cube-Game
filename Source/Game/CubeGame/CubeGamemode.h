@@ -15,8 +15,7 @@ class GAME_API ACubeGamemode : public AGameMode
 	GENERATED_BODY()
 
 public:
-	virtual AActor* FindPlayerStart_Implementation(AController* Player, const FString& IncomingName) override;
-
+	
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;
 

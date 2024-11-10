@@ -16,6 +16,7 @@ class UPlayerControllerInterface : public UInterface
 /**
  * 
  */
+
 class GAME_API IPlayerControllerInterface
 {
 	GENERATED_BODY()
@@ -24,4 +25,7 @@ class GAME_API IPlayerControllerInterface
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void CubesOnPlatform(int Amount);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FVector GetCombineCubeSize();
 };

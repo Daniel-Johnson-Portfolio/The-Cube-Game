@@ -4,6 +4,8 @@
 #include "AIController_Cube.h"
 
 #include "Inputs.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -20,6 +22,11 @@ ACubeBase* AAIController_Cube::newPawn_Implementation()
 	return _CurrentlyActivePawn;
 }
 
+void AAIController_Cube::PuaseBehaviorTree()
+{
+	_BlackboardComponent->SetValueAsBool(TEXT("Pause"), !_BlackboardComponent->GetValueAsBool(TEXT("Pause")));
+}
+
 // Called when the game starts or when spawned
 void AAIController_Cube::BeginPlay()
 {
@@ -30,6 +37,7 @@ void AAIController_Cube::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 	RunBehaviorTree(_BehaviourTree);
+	_BlackboardComponent = this->GetBlackboardComponent();
 }
 
 // Called every frame

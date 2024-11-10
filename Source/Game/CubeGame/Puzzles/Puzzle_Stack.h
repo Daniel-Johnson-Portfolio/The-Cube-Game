@@ -25,8 +25,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TObjectPtr<UStaticMeshComponent> _StaticMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="SetupActor")
+	TObjectPtr<UStaticMeshComponent> _StaticMeshComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SetupActor")
+	UStaticMesh* _StaticMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SetupActor")
+	UMaterial* _Material;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	APlayerController* _PlayerController;
@@ -54,5 +60,8 @@ protected:
 	UFUNCTION()
 	void ComponentEntered(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	
-	void CheckForMovement();     
+	void CheckForMovement();
+
+	UFUNCTION()
+	void Init();
 };

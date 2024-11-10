@@ -30,7 +30,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Input_JumpReleased();
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void Input_AIMove(FVector Pos);
+	void Input_PauseAI();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UInputMappingContext* GetMappingContext();

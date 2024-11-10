@@ -9,6 +9,8 @@
 #include "PawnInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "EnhancedInputSubsystems.h"
+#include "HUD_Cube.h"
+#include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -22,6 +24,7 @@ void APlayerController_Cube::SetupInputComponent()
 		EIP->BindAction(_MoveAction, ETriggerEvent::Triggered, this, &APlayerController_Cube::Move);
 		EIP->BindAction(_JumpAction, ETriggerEvent::Triggered, this, &APlayerController_Cube::JumpPressed);
 		EIP->BindAction(_SwapChar, ETriggerEvent::Started, this , &APlayerController_Cube::SwapChar);
+		EIP->BindAction(_PauseAI, ETriggerEvent::Started, this , &APlayerController_Cube::PauseAI);
 	}
 	
 }
@@ -77,16 +80,23 @@ void APlayerController_Cube::SwapChar()
 	_PossessedPawn = _NPCCharacterArray[0];
 	this->Possess(_PossessedPawn);
 	_NPCCharacterArray.RemoveAt(0);
-	_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
 
 	for (AAIController_Cube* con : _AiControllers)
 	{
 		con->_CurrentlyActivePawn = _PossessedPawn;
 	}
 	
-	
-	
 }
+
+void APlayerController_Cube::PauseAI()
+{
+	for(AAIController_Cube* AiController : _AiControllers)
+	{
+		AiController->PuaseBehaviorTree();
+	}
+	_HUDWidget->ToggleAiFollow();
+}
+
 
 void APlayerController_Cube::OnPossess(APawn* InPawn)
 {
@@ -96,6 +106,13 @@ void APlayerController_Cube::OnPossess(APawn* InPawn)
 void APlayerController_Cube::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if(_HUDWidgetClass)
+	{	
+		_HUDWidget = CreateWidget<UHUD_Cube, APlayerController_Cube*>(this, _HUDWidgetClass.Get());
+		_HUDWidget->AddToViewport();
+		UE_LOG(LogTemp, Warning, TEXT("WIDGET"));
+	}
 	
 	if (APlayerController* PC = Cast<APlayerController>(this))
 	{
@@ -190,8 +207,6 @@ void APlayerController_Cube::BeginPlay()
 			_PossessedPawn = _NPCCharacterArray[0];
 			this->Possess(_PossessedPawn);
 			_NPCCharacterArray.RemoveAt(0);
-			_PossessedPawn->OnMoved.AddUniqueDynamic(this, &APlayerController_Cube::MoveAI);
-			OnPuzzleInformation.Broadcast(3,3,3);
 			for (AAIController_Cube* con : _AiControllers)
 			{
 				con->_CurrentlyActivePawn = _PossessedPawn;
@@ -200,6 +215,7 @@ void APlayerController_Cube::BeginPlay()
 		}
 		
 	}
+	OnPlayerControllerReady.Broadcast();
 }
 
 void APlayerController_Cube::FindPlayerStart_Implementation()
@@ -233,13 +249,12 @@ void APlayerController_Cube::CubesOnPlatform_Implementation(int amount)
 		TSet<float> SeenValues;
 		for (const auto& Elem : CharMap)
 		{
-			ACubeBase* Key = Elem.Key;
 			float Value = Elem.Value;
 
 			for (float SeenValue : SeenValues)
 			{
 				// Check if SeenValue is within RangeThreshold of Value
-				if (FMath::Abs(SeenValue - Value) <= 1)
+				if (FMath::Abs(SeenValue - Value) <= 5.0f)
 				{
 					HasUniqueValues = false;
 					break;  // Exit the loop as soon as we find a near match
@@ -257,6 +272,7 @@ void APlayerController_Cube::CubesOnPlatform_Implementation(int amount)
 		{
 			UE_LOG(LogTemp, Log, TEXT("All values are unique."));
 			OnStacked.Broadcast();
+			_HUDWidget->EnableWinText();
 		}
 		else
 		{
@@ -267,13 +283,19 @@ void APlayerController_Cube::CubesOnPlatform_Implementation(int amount)
 	
 }
 
-void APlayerController_Cube::MoveAI(FVector pos)
+FVector APlayerController_Cube::GetCombineCubeSize_Implementation()
 {
-	for(ACubeBase* Char : _NPCCharacterArray)
+	for (ACubeBase* Cube : _AllCharacterArray)
 	{
-		IInputs::Execute_Input_AIMove(Char, pos);
+		if(Cube)
+		{
+			_CombinedCubeExtents += Cube->_CubeExtents3D;
+			
+		}
 	}
-	
+	return _CombinedCubeExtents;
 }
+
+
 
 

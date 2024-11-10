@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "AIController_Cube.h"
 #include "EnhancedInputSubsystems.h"
+
 #include "PlayerControllerInterface.h"
 #include "GameFramework/PlayerController.h"
 #include "PlayerController_Cube.generated.h"
 
+class UHUD_Cube;
 class ACubeBase;
 /**
  * 
@@ -16,9 +18,7 @@ class ACubeBase;
 class UInputAction;
 struct FInputActionValue;
 
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FPuzzleInformationSignature, int, amountofCubes, float, CubeStackHeight, float, biggestCubeFace);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerControllerReadySignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCubesStackedSignature);
 
 UCLASS(Abstract)
@@ -35,6 +35,8 @@ protected:
 	TObjectPtr<UInputAction> _JumpAction;
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> _SwapChar;
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> _PauseAI;
 	UPROPERTY(EditAnywhere, Category="Characters")
 	TArray<TSubclassOf<ACubeBase>> _CharacterClassArray;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Character")
@@ -59,7 +61,13 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category="Characters")
 	TSubclassOf<AAIController_Cube> _AiControllerBluePrint;
-	
+
+	UPROPERTY(VisibleAnywhere, Category="Characters")
+	FVector _CombinedCubeExtents = FVector::Zero();
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UHUD_Cube> _HUDWidgetClass;
+	TObjectPtr<UHUD_Cube> _HUDWidget;
 	
 	virtual void SetupInputComponent() override;
 
@@ -67,7 +75,8 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void JumpPressed();
 	void SwapChar();
-
+	void PauseAI();
+	
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void BeginPlay() override;
 
@@ -75,19 +84,17 @@ public:
 	void FindPlayerStart_Implementation();
 
 	virtual void CubesOnPlatform_Implementation(int Amount); 
-	
-	UFUNCTION()
-	void MoveAI(FVector pos);
+
+	virtual FVector GetCombineCubeSize_Implementation() override;
 
 	UPROPERTY(BlueprintAssignable)
 	FCubesStackedSignature OnStacked;
 	
-
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Characters")
 //	AAIController_Cube* _AiController;
 	
 	UPROPERTY(BlueprintAssignable)
-	FPuzzleInformationSignature OnPuzzleInformation;
+	FPlayerControllerReadySignature OnPlayerControllerReady;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Cube Data")
 	UDataTable* _CubeDataTable;

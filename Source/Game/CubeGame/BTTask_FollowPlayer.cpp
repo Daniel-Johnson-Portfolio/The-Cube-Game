@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "AiControllerInterface.h"
 #include "CubeBase.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 EBTNodeResult::Type UBTTask_FollowPlayer::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -20,10 +21,15 @@ EBTNodeResult::Type UBTTask_FollowPlayer::ExecuteTask(UBehaviorTreeComponent& Ow
 		FVector CurrentPlayerLocation = _CurrentPlayer->GetActorLocation();
 		
 		bInRange = (FVector::Dist(CurrentPlayerLocation, AiPawnLocation) < 250.0f);
-		if(!bInRange)
+		if(!bInRange && !OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("Pause")))
 		{
 			FVector NewLocation = FMath::VInterpTo(AiPawnLocation, CurrentPlayerLocation, GetWorld()->GetDeltaSeconds(), 1.0f);
 			_AIPawn->SetActorLocation(NewLocation);
+			return EBTNodeResult::Failed;
+		}
+		if(OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("Pause")))
+		{
+			_AIPawn->SetActorLocation(_AIPawn->GetActorLocation());
 			return EBTNodeResult::Failed;
 		}
 			return EBTNodeResult::Succeeded;
