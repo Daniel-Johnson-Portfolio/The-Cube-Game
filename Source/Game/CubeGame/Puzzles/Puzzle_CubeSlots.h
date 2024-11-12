@@ -9,7 +9,12 @@
 class UBoxComponent;
 class UCubeType;
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FValidActorSignature);
+
+
 UCLASS()
+
 class GAME_API APuzzle_CubeSlots : public AActor
 {
 	GENERATED_BODY()
@@ -17,6 +22,9 @@ class GAME_API APuzzle_CubeSlots : public AActor
 public:
 	// Sets default values for this actor's properties
 	APuzzle_CubeSlots();
+
+	UPROPERTY(BlueprintAssignable)
+	FValidActorSignature OnValidActor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Puzzle")
 	UCubeType* _CubeType;

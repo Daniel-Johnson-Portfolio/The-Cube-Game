@@ -36,7 +36,7 @@ void APuzzle_CubeSlots::CubeEntered(UPrimitiveComponent* OverlappedComponent, AA
 		if(IPawnInterface::Execute_ReturnCubeType(OtherActor) == _CubeType)
 		{
 			bValidActor = true;
-			
+			OnValidActor.Broadcast();
 		}
 	}
 	
