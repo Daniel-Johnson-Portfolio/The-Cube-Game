@@ -27,4 +27,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UStaticMesh> _CubeMesh;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FName UniqueID;
 };

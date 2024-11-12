@@ -79,6 +79,7 @@ void ACubeBase::Input_Move_Implementation(FVector2D Value)
 
 void ACubeBase::Pawn_Init_Implementation(UCubeType* Type, FVector Location)
 {
+	_CubeType = Type;
 	_StaticMesh->SetMassOverrideInKg(FName(NAME_None),Type->_CubeMass, true);
 	
 	IPawnInterface::Pawn_Init_Implementation(Type, Location);
@@ -145,9 +146,9 @@ FHitResult ACubeBase::ReturnActorUnderPawn_Implementation()
 	return ACubeBase::DownwardTrace(_StaticMesh->GetComponentLocation(), _StaticMesh->GetComponentLocation() - FVector(0,0,20), CollisionParams, _StaticMesh->GetComponentRotation().Quaternion(), ECC_Visibility);
 }
 
-UCubeType* ACubeBase::ReturnCubeType_Implementation()
+FName ACubeBase::ReturnCubeType_Implementation()
 {
-	return _CubeType;
+	return _CubeType->UniqueID;
 }
 
 FHitResult ACubeBase::DownwardTrace(FVector StartPos, FVector EndPos, FCollisionQueryParams CollisionParams, FQuat BoxRotation, ECollisionChannel TraceChannel)

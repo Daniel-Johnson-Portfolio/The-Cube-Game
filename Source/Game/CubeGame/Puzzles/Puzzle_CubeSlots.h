@@ -54,7 +54,7 @@ protected:
 	TArray<AActor*> _ActorsOnPlatform;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool bValidActor;
+	bool bValidActor = false;
 
 	UPROPERTY()
 	APlayerController* _PlayerController;

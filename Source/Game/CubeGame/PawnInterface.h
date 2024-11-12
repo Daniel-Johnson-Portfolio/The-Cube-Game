@@ -37,6 +37,6 @@ public:
 	FHitResult ReturnActorUnderPawn();
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	UCubeType* ReturnCubeType();
+	FName ReturnCubeType();
 	
 };

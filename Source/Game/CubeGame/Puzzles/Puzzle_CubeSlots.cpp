@@ -37,10 +37,11 @@ void APuzzle_CubeSlots::BeginPlay()
 
 void APuzzle_CubeSlots::CubeEntered(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (UKismetSystemLibrary::DoesImplementInterface(OtherActor, UPawnInterface::StaticClass()))
+	if (UKismetSystemLibrary::DoesImplementInterface(OtherActor, UPawnInterface::StaticClass()) && !bValidActor)
 	{
 		_ActorsOnPlatform.AddUnique(OtherActor);
-		if(IPawnInterface::Execute_ReturnCubeType(OtherActor) == _CubeType)
+		
+		if(IPawnInterface::Execute_ReturnCubeType(OtherActor) == _CubeType->UniqueID) //may be able to convert back from ID
 		{
 			bValidActor = true;
 			OnValidActor.Broadcast();

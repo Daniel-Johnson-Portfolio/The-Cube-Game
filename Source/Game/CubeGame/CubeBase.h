@@ -65,7 +65,7 @@ public:
 
 	virtual FHitResult ReturnActorUnderPawn_Implementation() override;
 
-	virtual UCubeType* ReturnCubeType_Implementation() override;
+	virtual FName ReturnCubeType_Implementation() override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
