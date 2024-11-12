@@ -22,7 +22,7 @@ void UGameRule_CubeSlots::BeginPlay()
 {
 	Super::BeginPlay();
 
-	APuzzle_CubeSlots::OnValidActor.AddUniqueDynamic(this, &UGameRule_CubeSlots::AddValidActor);
+///	APuzzle_CubeSlots::OnValidActor.AddUniqueDynamic(this, &UGameRule_CubeSlots::AddValidActor);
 
 	// ...
 	

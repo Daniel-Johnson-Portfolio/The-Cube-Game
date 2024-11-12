@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Game/CubeGame/PuzzleInterface.h"
 #include "GameFramework/Actor.h"
 #include "Puzzle_CubeSlots.generated.h"
 
+class UCubeSlots_Component;
 class UBoxComponent;
 class UCubeType;
 
@@ -15,7 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FValidActorSignature);
 
 UCLASS()
 
-class GAME_API APuzzle_CubeSlots : public AActor
+class GAME_API APuzzle_CubeSlots : public AActor, public IPuzzleInterface
 {
 	GENERATED_BODY()
 
@@ -26,10 +28,13 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FValidActorSignature OnValidActor;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Puzzle")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Puzzle")
 	UCubeType* _CubeType;
 
-	
+	virtual APuzzle_CubeSlots* GetCubeSlot_Implementation() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Puzzle")
+	UCubeSlots_Component* _CubeSlotManager;
 
 protected:
 	// Called when the game starts or when spawned
@@ -40,6 +45,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UBoxComponent> _BoxComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UStaticMeshComponent> _StaticMesh;
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
