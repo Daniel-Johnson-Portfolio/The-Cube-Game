@@ -27,9 +27,22 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void CubeEntered(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UBoxComponent> _BoxComponent;
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<AActor*> _ActorsOnPlatform;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bValidActor;
+
+	UPROPERTY()
+	APlayerController* _PlayerController;
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

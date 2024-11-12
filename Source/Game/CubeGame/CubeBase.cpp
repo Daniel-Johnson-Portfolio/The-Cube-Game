@@ -145,6 +145,11 @@ FHitResult ACubeBase::ReturnActorUnderPawn_Implementation()
 	return ACubeBase::DownwardTrace(_StaticMesh->GetComponentLocation(), _StaticMesh->GetComponentLocation() - FVector(0,0,20), CollisionParams, _StaticMesh->GetComponentRotation().Quaternion(), ECC_Visibility);
 }
 
+UCubeType* ACubeBase::ReturnCubeType_Implementation()
+{
+	return _CubeType;
+}
+
 FHitResult ACubeBase::DownwardTrace(FVector StartPos, FVector EndPos, FCollisionQueryParams CollisionParams, FQuat BoxRotation, ECollisionChannel TraceChannel)
 {
 	FHitResult HitResult;

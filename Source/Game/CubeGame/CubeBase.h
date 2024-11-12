@@ -61,8 +61,11 @@ public:
 	
 
 	virtual void Pawn_Init_Implementation(UCubeType* Type, FVector Location) override;
+	
 
 	virtual FHitResult ReturnActorUnderPawn_Implementation() override;
+
+	virtual UCubeType* ReturnCubeType_Implementation() override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

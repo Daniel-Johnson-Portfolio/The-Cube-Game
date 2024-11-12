@@ -28,4 +28,5 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetCombineCubeSize();
+	
 };

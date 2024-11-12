@@ -83,7 +83,8 @@ protected:
 public:
 	void FindPlayerStart_Implementation();
 
-	virtual void CubesOnPlatform_Implementation(int Amount); 
+	virtual void CubesOnPlatform_Implementation(int Amount) override;
+
 
 	virtual FVector GetCombineCubeSize_Implementation() override;
 

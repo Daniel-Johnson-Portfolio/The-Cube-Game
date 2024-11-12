@@ -283,6 +283,7 @@ void APlayerController_Cube::CubesOnPlatform_Implementation(int amount)
 	
 }
 
+
 FVector APlayerController_Cube::GetCombineCubeSize_Implementation()
 {
 	for (ACubeBase* Cube : _AllCharacterArray)
