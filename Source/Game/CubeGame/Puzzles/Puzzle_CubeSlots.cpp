@@ -20,6 +20,7 @@ APuzzle_CubeSlots::APuzzle_CubeSlots()
 	_BoxComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &APuzzle_CubeSlots::CubeEntered);
 	RootComponent = _BoxComponent;
 	_StaticMesh->SetupAttachment(_BoxComponent);
+	_StaticMesh->AddRelativeLocation(FVector(0,0,0.1)); //Keeps the slot above the ground
 }
 
 APuzzle_CubeSlots* APuzzle_CubeSlots::GetCubeSlot_Implementation()
@@ -44,12 +45,14 @@ void APuzzle_CubeSlots::CubeEntered(UPrimitiveComponent* OverlappedComponent, AA
 		if(IPawnInterface::Execute_ReturnCubeType(OtherActor) == _CubeType->UniqueID) //may be able to convert back from ID
 		{
 			bValidActor = true;
-			OnValidActor.Broadcast();
+			OnValidActor.Broadcast(); //Needs bool
 		}
 	}
 	
 	
 }
+
+//When cube step off remove from array and broadcast false
 
 // Called every frame
 void APuzzle_CubeSlots::Tick(float DeltaTime)

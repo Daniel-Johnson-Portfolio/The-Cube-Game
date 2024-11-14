@@ -3,35 +3,30 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
-#include "GameRule.generated.h"
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameRuleCompleteDSignature);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGameRulePointScoredSignature, AController*, scorer, int, points);
-
+#include "GameRuleBase.h"
+#include "GameRule_Coins.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class GAME_API UGameRule : public UActorComponent
+class GAME_API UGameRule_Coins : public UGameRuleBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	UGameRule();
-	FGameRuleCompleteDSignature OnComplete;
-	FGameRulePointScoredSignature OnPointScored;
+	UGameRule_Coins();
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<AActor*> _FoundCoins;
 
-	UFUNCTION()
-
-	virtual void Init();
-	
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	void BroadcastComplete();
-	void BroadcastPointsScored(AController* causer, int points);
+
+	UFUNCTION()
+	void CoinCollected();
+	
+	int _CoinsCollected;
 
 public:
 	// Called every frame

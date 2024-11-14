@@ -23,7 +23,7 @@ EBTNodeResult::Type UBTTask_FollowPlayer::ExecuteTask(UBehaviorTreeComponent& Ow
 		bInRange = (FVector::Dist(CurrentPlayerLocation, AiPawnLocation) < 250.0f);
 		if(!bInRange && !OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("Pause")))
 		{
-			FVector NewLocation = FMath::VInterpTo(AiPawnLocation, CurrentPlayerLocation, GetWorld()->GetDeltaSeconds(), 1.0f);
+			FVector NewLocation = FMath::VInterpTo(AiPawnLocation, FVector(CurrentPlayerLocation.X, CurrentPlayerLocation.Y, CurrentPlayerLocation.Z / 2.0f), GetWorld()->GetDeltaSeconds(), 1.0f);
 			_AIPawn->SetActorLocation(NewLocation);
 			return EBTNodeResult::Failed;
 		}

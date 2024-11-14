@@ -4,14 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "PuzzleInterface.generated.h"
+#include "DoorInterface.generated.h"
 
-class APuzzle_Coins;
-class APuzzle_CubeSlots;
-class UCubeSlots_Component;
 // This class does not need to be modified.
 UINTERFACE()
-class UPuzzleInterface : public UInterface
+class UDoorInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -19,15 +16,12 @@ class UPuzzleInterface : public UInterface
 /**
  * 
  */
-class GAME_API IPuzzleInterface
+class GAME_API IDoorInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	APuzzle_CubeSlots* GetCubeSlot();
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	APuzzle_Coins* GetCoin();
+	void OpenDoor();
 };

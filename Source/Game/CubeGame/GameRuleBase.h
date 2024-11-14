@@ -4,34 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "GameRule.generated.h"
+#include "GameRuleBase.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameRuleCompleteDSignature);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGameRulePointScoredSignature, AController*, scorer, int, points);
-
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameRuleCompleteSignature);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class GAME_API UGameRule : public UActorComponent
+
+class GAME_API UGameRuleBase : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	UGameRule();
-	FGameRuleCompleteDSignature OnComplete;
-	FGameRulePointScoredSignature OnPointScored;
-
-	UFUNCTION()
-
-	virtual void Init();
-	
+	UGameRuleBase();
+	FGameRuleCompleteSignature OnComplete;
+	void BroadcastComplete();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	void BroadcastComplete();
-	void BroadcastPointsScored(AController* causer, int points);
 
 public:
 	// Called every frame

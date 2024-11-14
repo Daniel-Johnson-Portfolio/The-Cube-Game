@@ -3,6 +3,7 @@
 
 #include "CubeSlots_Component.h"
 
+#include "DoorInterface.h"
 #include "PuzzleInterface.h"
 #include "ToolBuilderUtil.h"
 #include "Kismet/GameplayStatics.h"
@@ -34,8 +35,6 @@ void UCubeSlots_Component::BeginPlay()
 			APuzzle_CubeSlots* CubeSlot = IPuzzleInterface::Execute_GetCubeSlot(puzzle);
 			CubeSlot->OnValidActor.AddUniqueDynamic(this, &UCubeSlots_Component::ValidActor);
 		}
-
-		
 	}
 
 	// ...
@@ -49,8 +48,12 @@ void UCubeSlots_Component::ValidActor()
 	UE_LOG(LogTemp, Warning, TEXT("Actors %d"), _amountOfValidActors)
 	if(_amountOfValidActors >= _FoundCubeSlots.Num())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AllCubesOnPlats"));
-		//tell door to open
+		if (UKismetSystemLibrary::DoesImplementInterface(this->GetOwner(), UDoorInterface::StaticClass()))
+		{
+			IDoorInterface::Execute_OpenDoor(this->GetOwner());
+			UE_LOG(LogTemp, Warning, TEXT("AllCubesOnPlats"));
+			
+		}
 	}
 }
 

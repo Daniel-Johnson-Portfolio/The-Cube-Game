@@ -140,7 +140,7 @@ void APlayerController_Cube::BeginPlay()
 		_ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 		
 
-		float _SpawnRadius = (DataRows.Num() * 500.0f);
+		float _SpawnRadius = (DataRows.Num() * 200.0f);
 		FVector _RandomPoint;
 		for (FCubeDataRow* Row : DataRows)
 		{
