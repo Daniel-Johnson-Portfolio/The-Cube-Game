@@ -27,14 +27,27 @@ void ACubeGamemode::BeginPlay()
 	if(UKismetSystemLibrary::DoesImplementInterface(GetWorld()->GetFirstPlayerController(), UPlayerControllerInterface::StaticClass()))
 	{
 		Cast<APlayerController_Cube>(GetWorld()->GetFirstPlayerController())->OnStacked.AddUniqueDynamic(this, &ACubeGamemode::CubesStacked);
-
-		
 	}
 
 	Super::BeginPlay();
 }
 
+void ACubeGamemode::AllCoinsCollected_Implementation()
+{
+	bHasCollectedAllCoins = true;
+}
+
+void ACubeGamemode::LevelCompleted()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Level Completed"));
+}
+
 void ACubeGamemode::CubesStacked()
 {
+	bCubesAreStacked = true;
 	UE_LOG(LogTemp, Warning, TEXT("CUBES STACKED"));
+	if(bHasCollectedAllCoins && bCubesAreStacked)
+	{
+		LevelCompleted();
+	}
 }

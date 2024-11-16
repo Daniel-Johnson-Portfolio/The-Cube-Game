@@ -26,7 +26,7 @@ protected:
 	TArray<AActor*> _FoundCubeSlots;
 
 	UFUNCTION()
-	void ValidActor();
+	void ValidActor(bool bIsValidActor);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int _amountOfValidActors;

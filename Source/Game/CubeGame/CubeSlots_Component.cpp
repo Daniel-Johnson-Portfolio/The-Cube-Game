@@ -15,7 +15,7 @@ UCubeSlots_Component::UCubeSlots_Component()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -36,33 +36,37 @@ void UCubeSlots_Component::BeginPlay()
 			CubeSlot->OnValidActor.AddUniqueDynamic(this, &UCubeSlots_Component::ValidActor);
 		}
 	}
-
-	// ...
 	
 }
 
 
-void UCubeSlots_Component::ValidActor()
+void UCubeSlots_Component::ValidActor(bool bIsValidActor)
 {
-	_amountOfValidActors++;
-	UE_LOG(LogTemp, Warning, TEXT("Actors %d"), _amountOfValidActors)
-	if(_amountOfValidActors >= _FoundCubeSlots.Num())
+	switch (bIsValidActor)
 	{
-		if (UKismetSystemLibrary::DoesImplementInterface(this->GetOwner(), UDoorInterface::StaticClass()))
-		{
-			IDoorInterface::Execute_OpenDoor(this->GetOwner());
-			UE_LOG(LogTemp, Warning, TEXT("AllCubesOnPlats"));
-			
-		}
+		case true:
+			_amountOfValidActors++;
+			if(_amountOfValidActors >= _FoundCubeSlots.Num())
+			{
+				if (UKismetSystemLibrary::DoesImplementInterface(this->GetOwner(), UDoorInterface::StaticClass()))
+				{
+					IDoorInterface::Execute_OpenDoor(this->GetOwner());
+				}
+			}
+		break;
+
+		
+		case false:
+			_amountOfValidActors--;
+		break;
 	}
+
 }
 
 // Called every frame
-void UCubeSlots_Component::TickComponent(float DeltaTime, ELevelTick TickType,
-                                         FActorComponentTickFunction* ThisTickFunction)
+void UCubeSlots_Component::TickComponent(float DeltaTime, ELevelTick TickType,FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
 }
 

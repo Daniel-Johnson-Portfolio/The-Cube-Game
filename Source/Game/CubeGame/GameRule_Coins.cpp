@@ -3,6 +3,7 @@
 
 #include "GameRule_Coins.h"
 
+#include "GameModeInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Puzzles/Puzzle_Coins.h"
 
@@ -44,8 +45,14 @@ void UGameRule_Coins::CoinCollected()
 
 	if(_CoinsCollected >= _FoundCoins.Num())
 	{
-		OnComplete.Broadcast();
+		//OnComplete.Broadcast();
 		UE_LOG(LogTemp, Warning, TEXT("AllCoinsCollected"));
+		if (UKismetSystemLibrary::DoesImplementInterface(this->GetOwner(), UGameModeInterface::StaticClass()))
+		{
+			IGameModeInterface::Execute_AllCoinsCollected(this->GetOwner());
+			
+		}
+		
 		
 	}
 }
