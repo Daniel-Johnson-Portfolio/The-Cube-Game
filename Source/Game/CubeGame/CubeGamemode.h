@@ -7,7 +7,7 @@
 #include "GameFramework/GameMode.h"
 #include "CubeGamemode.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEndOfLevelSignature)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEndOfLevelSignature, int, levelNumber);
 
 UCLASS(Abstract)
 class GAME_API ACubeGamemode : public AGameMode, public IGameModeInterface
