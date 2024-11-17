@@ -39,6 +39,7 @@ ACubeGamemode* ACubeGamemode::GetGameMode_Implementation()
 
 void ACubeGamemode::LoadNextLevel_Implementation(int LevelNum)
 {
+	UE_LOG(LogTemp, Warning, TEXT("OPen Level %d"), LevelNum);
 	UGameplayStatics::OpenLevel(this, Levels[LevelNum], true, FString());
 }
 

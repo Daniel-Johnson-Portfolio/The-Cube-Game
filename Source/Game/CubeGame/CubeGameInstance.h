@@ -16,12 +16,9 @@ class GAME_API UCubeGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-
-	virtual void StartGameInstance() override;
-	void OnPostLoadMap(UWorld* LoadedWorld);
+	
+	void OnPostLoadMap(const FActorsInitializedParams& Params);
 	virtual void Init() override;
-
-	void BeginPlay();
 
 	UFUNCTION()
 	void NextLevel();

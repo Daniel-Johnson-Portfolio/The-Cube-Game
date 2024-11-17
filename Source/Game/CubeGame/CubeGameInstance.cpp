@@ -8,35 +8,40 @@
 #include "GameFramework/GameModeBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-void UCubeGameInstance::OnPostLoadMap(UWorld* LoadedWorld)
+void UCubeGameInstance::OnPostLoadMap(const FActorsInitializedParams& Params)
 {
-	if (!LoadedWorld || !LoadedWorld->GetAuthGameMode())
+	UE_LOG(LogTemp, Warning, TEXT("BBBBBB"));
+	
+	if (!GetWorld() || !GetWorld()->GetAuthGameMode())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GameMode not available on PostLoadMap."));
 		return;
 	}
 	
-	if (UKismetSystemLibrary::DoesImplementInterface(LoadedWorld->GetAuthGameMode()->GetClass(), UGameModeInterface::StaticClass()))
+	if (UKismetSystemLibrary::DoesImplementInterface(GetWorld()->GetAuthGameMode(), UGameModeInterface::StaticClass()))
 	{
-		_CurrentGameMode = IGameModeInterface::Execute_GetGameMode(LoadedWorld->GetAuthGameMode());
-		if (_CurrentGameMode)
-		{
-			_CurrentGameMode->OnLevelEnd.AddUniqueDynamic(this, &UCubeGameInstance::NextLevel);
-		}
+		_CurrentGameMode = IGameModeInterface::Execute_GetGameMode(GetWorld()->GetAuthGameMode());
+		_CurrentGameMode->OnLevelEnd.AddUniqueDynamic(this, &UCubeGameInstance::NextLevel);
+		UE_LOG(LogTemp, Warning, TEXT("AAAAAAAA"));
 	}
+	UE_LOG(LogTemp, Warning, TEXT("GameMode Class Name: %s"), *GetWorld()->GetAuthGameMode()->GetClass()->GetName());
 }
 
 void UCubeGameInstance::Init()
 {
+//	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UCubeGameInstance::OnPostLoadMap);
 	Super::Init();
 	UE_LOG(LogTemp, Warning, TEXT("Being."));
 	// Bind to map load event
-	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UCubeGameInstance::OnPostLoadMap);
+//	FWorldDelegates::OnPostWorldInitialization.AddUObject(this, &UCubeGameInstance::OnPostLoadMap);
+	FWorldDelegates::OnWorldInitializedActors.AddUObject(this, &UCubeGameInstance::OnPostLoadMap);
+	
 }
 
 void UCubeGameInstance::NextLevel()
 {
-	_CurrentLevel ++;
+	_CurrentLevel++;
 	IGameModeInterface::Execute_LoadNextLevel(_CurrentGameMode, _CurrentLevel);
+	UE_LOG(LogTemp, Warning, TEXT("SENT"));
 	
 }

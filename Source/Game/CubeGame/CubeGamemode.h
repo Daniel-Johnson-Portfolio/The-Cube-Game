@@ -9,6 +9,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEndOfLevelSignature);
 
+
 UCLASS(Abstract)
 class GAME_API ACubeGamemode : public AGameMode, public IGameModeInterface
 {
