@@ -28,4 +28,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "LevelData")
 	ACubeGamemode* _CurrentGameMode;
+	
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "LevelData")
+	int _coinsCollected;
 };
