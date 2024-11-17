@@ -32,6 +32,16 @@ void ACubeGamemode::BeginPlay()
 	Super::BeginPlay();
 }
 
+ACubeGamemode* ACubeGamemode::GetGameMode_Implementation()
+{
+	return this;
+}
+
+void ACubeGamemode::LoadNextLevel_Implementation(int LevelNum)
+{
+	UGameplayStatics::OpenLevel(this, Levels[LevelNum], true, FString());
+}
+
 void ACubeGamemode::AllCoinsCollected_Implementation()
 {
 	bHasCollectedAllCoins = true;
@@ -40,6 +50,7 @@ void ACubeGamemode::AllCoinsCollected_Implementation()
 void ACubeGamemode::LevelCompleted()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Level Completed"));
+	OnLevelEnd.Broadcast();
 }
 
 void ACubeGamemode::CubesStacked()

@@ -6,6 +6,7 @@
 #include "UObject/Interface.h"
 #include "GameModeInterface.generated.h"
 
+class ACubeGamemode;
 // This class does not need to be modified.
 UINTERFACE()
 class UGameModeInterface : public UInterface
@@ -24,4 +25,11 @@ class GAME_API IGameModeInterface
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void AllCoinsCollected();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	ACubeGamemode* GetGameMode();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void LoadNextLevel(int LevelNum);
+	
 };

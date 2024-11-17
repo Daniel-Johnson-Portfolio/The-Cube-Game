@@ -7,7 +7,7 @@
 #include "GameFramework/GameMode.h"
 #include "CubeGamemode.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEndOfLevelSignature, int, levelNumber);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEndOfLevelSignature);
 
 UCLASS(Abstract)
 class GAME_API ACubeGamemode : public AGameMode, public IGameModeInterface
@@ -15,11 +15,20 @@ class GAME_API ACubeGamemode : public AGameMode, public IGameModeInterface
 	GENERATED_BODY()
 
 public:
+
+	FEndOfLevelSignature OnLevelEnd;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Levels")
+	TArray<FName> Levels;
 	
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;
 
 	virtual void BeginPlay() override;
+
+	virtual ACubeGamemode* GetGameMode_Implementation() override;
+
+	virtual void LoadNextLevel_Implementation(int LevelNum) override;
 
 	virtual void AllCoinsCollected_Implementation() override;
 
