@@ -111,7 +111,8 @@ void APlayerController_Cube::BeginPlay()
 	{	
 		_HUDWidget = CreateWidget<UHUD_Cube, APlayerController_Cube*>(this, _HUDWidgetClass.Get());
 		_HUDWidget->AddToViewport();
-		UE_LOG(LogTemp, Warning, TEXT("WIDGET"));
+		_HUDWidget->UpdateCoinsText(_CurrentCoins);
+		_HUDWidget->DefaultHintText();
 	}
 	
 	if (APlayerController* PC = Cast<APlayerController>(this))
@@ -231,6 +232,16 @@ void APlayerController_Cube::FindPlayerStart_Implementation()
 	}
 }
 
+void APlayerController_Cube::AllCoinsCollected_Implementation()
+{
+	_HUDWidget->EndLevelHintText();
+}
+
+void APlayerController_Cube::EnableWinText_Implementation()
+{
+	_HUDWidget->EnableWinText();
+}
+
 void APlayerController_Cube::CubesOnPlatform_Implementation(int amount)
 {
 	if(amount == _AllCharacterArray.Num())
@@ -272,13 +283,27 @@ void APlayerController_Cube::CubesOnPlatform_Implementation(int amount)
 		{
 			UE_LOG(LogTemp, Log, TEXT("All values are unique."));
 			OnStacked.Broadcast();
-			_HUDWidget->EnableWinText();
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Duplicate values found in CharMap."));
 		}
 		
+	}
+	
+}
+
+APlayerController_Cube* APlayerController_Cube::GetPlayerController_Implementation()
+{
+	return this;
+}
+
+void APlayerController_Cube::SetCoins_Implementation(int coins)
+{
+	_CurrentCoins = coins;
+	if(_HUDWidget)
+	{
+		_HUDWidget->UpdateCoinsText(_CurrentCoins);
 	}
 	
 }

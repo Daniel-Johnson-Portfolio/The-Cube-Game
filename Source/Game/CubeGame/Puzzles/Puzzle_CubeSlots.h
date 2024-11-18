@@ -51,10 +51,7 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMeshComponent> _StaticMesh;
-
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<AActor*> _ActorsOnPlatform;
+	
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bValidActor = false;

@@ -20,6 +20,20 @@ public:
 	void DisableWinText();
 	void ToggleAiFollow();
 	void DefaultHintText();
+	void EndLevelHintText();
+	void UpdateCoinsText(int coins);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString _DefaultHintText = "Hint: "; //Set by designer
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString _EndLevelHintText = "Hint: "; //Set by designer
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString _CurrentCoinText = "Current Pyramids: "; //Set by designer
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString _LevelCompleteText = "Level Complete"; //Set by designer
 
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -27,6 +41,11 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> _CubeAiButton;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UTextBlock> _CurrentCoinsText;
+
+	
 
 	UPROPERTY()
 	bool bCubesFollowing = true;

@@ -2,6 +2,9 @@
 
 
 #include "HUD_Cube.h"
+
+#include <string>
+
 #include "Components/TextBlock.h"
 #include "Evaluation/Blending/MovieSceneBlendType.h"
 
@@ -11,7 +14,11 @@ void UHUD_Cube::NativeConstruct()
 
 	if(_WinText)
 	{
-		_WinText->SetText(FText::FromString("Won"));
+		_WinText->SetText(FText::FromString(_LevelCompleteText));
+	}
+	if(_PuzzleHintText)
+	{
+		DefaultHintText();
 	}
 }
 
@@ -40,7 +47,21 @@ void UHUD_Cube::ToggleAiFollow()
 
 void UHUD_Cube::DefaultHintText()
 {
-	_PuzzleHintText->SetText(FText::FromString("Stack the Cubes on the platform"));
+	_PuzzleHintText->SetText(FText::FromString(_DefaultHintText));
+}
+
+void UHUD_Cube::EndLevelHintText()
+{
+	_PuzzleHintText->SetText(FText::FromString(_EndLevelHintText));
+}
+
+void UHUD_Cube::UpdateCoinsText(int coins)
+{
+	if (_CurrentCoinsText)
+	{
+		FString CoinsString = FString::Printf(TEXT("%s %d"), *_CurrentCoinText, coins);
+		_CurrentCoinsText->SetText(FText::FromString(CoinsString));
+	}
 }
 
 

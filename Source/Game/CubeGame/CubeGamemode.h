@@ -7,8 +7,9 @@
 #include "GameFramework/GameMode.h"
 #include "CubeGamemode.generated.h"
 
+class APlayerController_Cube;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEndOfLevelSignature);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCoinCollected);
 
 UCLASS(Abstract)
 class GAME_API ACubeGamemode : public AGameMode, public IGameModeInterface
@@ -17,6 +18,7 @@ class GAME_API ACubeGamemode : public AGameMode, public IGameModeInterface
 
 public:
 
+	FCoinCollected OnCoinCollected;
 	FEndOfLevelSignature OnLevelEnd;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Levels")
@@ -29,17 +31,30 @@ public:
 
 	virtual ACubeGamemode* GetGameMode_Implementation() override;
 
+	void LoadLevelInternal(int LevelNum);
+	
 	virtual void LoadNextLevel_Implementation(int LevelNum) override;
 
+	virtual void SetCoins_Implementation(int Coins) override;
+
 	virtual void AllCoinsCollected_Implementation() override;
+
+	virtual void CoinCollected_Implementation() override;
 
 	void LevelCompleted();
 
 protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int _Coins;
+	
 	TArray<TObjectPtr<AActor>> _PlayerStarts;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<TObjectPtr<AController>> _PlayerControllers;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	APlayerController_Cube* _PlayerController;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bHasCollectedAllCoins;
@@ -49,4 +64,5 @@ protected:
 
 	UFUNCTION()
 	void CubesStacked();
+	
 };

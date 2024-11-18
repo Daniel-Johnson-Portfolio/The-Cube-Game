@@ -15,6 +15,7 @@ APuzzle_CubeSlots::APuzzle_CubeSlots()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	
 	_StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	_BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	_BoxComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &APuzzle_CubeSlots::CubeEntered);
@@ -41,28 +42,26 @@ void APuzzle_CubeSlots::CubeEntered(UPrimitiveComponent* OverlappedComponent, AA
 {
 	if (UKismetSystemLibrary::DoesImplementInterface(OtherActor, UPawnInterface::StaticClass()) && !bValidActor)
 	{
-		_ActorsOnPlatform.AddUnique(OtherActor);
-		
-		if(IPawnInterface::Execute_ReturnCubeType(OtherActor) == _CubeType->UniqueID) //may be able to convert back from ID
+		if(IPawnInterface::Execute_ReturnCubeType(OtherActor) == _CubeType->UniqueID)
 		{
 			bValidActor = true;
-			OnValidActor.Broadcast(bValidActor); //Needs bool
+			OnValidActor.Broadcast(bValidActor);
 		}
 	}
-	
-	
 }
 
 void APuzzle_CubeSlots::CubeLeft(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	bValidActor = false;
-	OnValidActor.Broadcast(bValidActor);
-	_ActorsOnPlatform.Remove(OtherActor);
+	if (UKismetSystemLibrary::DoesImplementInterface(OtherActor, UPawnInterface::StaticClass()) && bValidActor)
+	{
+			if(IPawnInterface::Execute_ReturnCubeType(OtherActor) == _CubeType->UniqueID)
+			{
+				bValidActor = false;
+				OnValidActor.Broadcast(bValidActor);
+			}
+	}
 }
 
-//When cube step off remove from array and broadcast false
-
-// Called every frame
 void APuzzle_CubeSlots::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

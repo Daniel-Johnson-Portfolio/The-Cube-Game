@@ -6,6 +6,7 @@
 #include "UObject/Interface.h"
 #include "PlayerControllerInterface.generated.h"
 
+class APlayerController_Cube;
 // This class does not need to be modified.
 UINTERFACE()
 class UPlayerControllerInterface : public UInterface
@@ -28,5 +29,17 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetCombineCubeSize();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	APlayerController_Cube* GetPlayerController();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetCoins(int coins);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void EnableWinText();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void AllCoinsCollected();
 	
 };

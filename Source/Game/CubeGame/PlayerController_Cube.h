@@ -37,10 +37,15 @@ protected:
 	TObjectPtr<UInputAction> _SwapChar;
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> _PauseAI;
+	
 	UPROPERTY(EditAnywhere, Category="Characters")
 	TArray<TSubclassOf<ACubeBase>> _CharacterClassArray;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Character")
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Characters")
 	int _CurrentCharacter = 0;
+
+	UPROPERTY(VisibleAnywhere, Category="Characters")
+	int _CurrentCoins;
 	
 	UPROPERTY(VisibleAnywhere, Category="Characters")
 	TArray<ACubeBase*> _NPCCharacterArray; //List of all characters that the play isn't currently controlling
@@ -83,9 +88,11 @@ protected:
 public:
 	void FindPlayerStart_Implementation();
 
+	virtual void AllCoinsCollected_Implementation() override;
+	virtual void EnableWinText_Implementation() override;
 	virtual void CubesOnPlatform_Implementation(int Amount) override;
-
-
+	virtual APlayerController_Cube* GetPlayerController_Implementation() override;
+	virtual void SetCoins_Implementation(int coins) override;
 	virtual FVector GetCombineCubeSize_Implementation() override;
 
 	UPROPERTY(BlueprintAssignable)

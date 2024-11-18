@@ -31,5 +31,11 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void LoadNextLevel(int LevelNum);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void CoinCollected();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetCoins(int Coins);
 	
 };

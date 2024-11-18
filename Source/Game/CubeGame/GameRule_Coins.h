@@ -7,6 +7,8 @@
 #include "GameRule_Coins.generated.h"
 
 
+class ACubeGamemode;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class GAME_API UGameRule_Coins : public UGameRuleBase
 {

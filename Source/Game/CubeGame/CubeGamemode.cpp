@@ -26,7 +26,9 @@ void ACubeGamemode::BeginPlay()
 {
 	if(UKismetSystemLibrary::DoesImplementInterface(GetWorld()->GetFirstPlayerController(), UPlayerControllerInterface::StaticClass()))
 	{
-		Cast<APlayerController_Cube>(GetWorld()->GetFirstPlayerController())->OnStacked.AddUniqueDynamic(this, &ACubeGamemode::CubesStacked);
+		_PlayerController = IPlayerControllerInterface::Execute_GetPlayerController(GetWorld()->GetFirstPlayerController());
+		_PlayerController->OnStacked.AddUniqueDynamic(this, &ACubeGamemode::CubesStacked);
+		IPlayerControllerInterface::Execute_SetCoins(_PlayerController, _Coins);
 	}
 
 	Super::BeginPlay();
@@ -37,20 +39,38 @@ ACubeGamemode* ACubeGamemode::GetGameMode_Implementation()
 	return this;
 }
 
+void ACubeGamemode::LoadLevelInternal(int LevelNum)
+{
+	UGameplayStatics::OpenLevel(this, Levels[LevelNum], true, FString());
+}
+
 void ACubeGamemode::LoadNextLevel_Implementation(int LevelNum)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OPen Level %d"), LevelNum);
-	UGameplayStatics::OpenLevel(this, Levels[LevelNum], true, FString());
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateUObject(this, &ACubeGamemode::LoadLevelInternal, LevelNum), 5, false);
+}
+
+void ACubeGamemode::SetCoins_Implementation(int Coins)
+{
+	_Coins = Coins;
 }
 
 void ACubeGamemode::AllCoinsCollected_Implementation()
 {
 	bHasCollectedAllCoins = true;
+	IPlayerControllerInterface::Execute_AllCoinsCollected(_PlayerController);
+}
+
+void ACubeGamemode::CoinCollected_Implementation()
+{
+	_Coins++;
+	IPlayerControllerInterface::Execute_SetCoins(_PlayerController, _Coins);
+	OnCoinCollected.Broadcast();
 }
 
 void ACubeGamemode::LevelCompleted()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Level Completed"));
+	IPlayerControllerInterface::Execute_EnableWinText(_PlayerController);
 	OnLevelEnd.Broadcast();
 }
 
@@ -63,3 +83,4 @@ void ACubeGamemode::CubesStacked()
 		LevelCompleted();
 	}
 }
+

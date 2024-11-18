@@ -22,6 +22,9 @@ public:
 
 	UFUNCTION()
 	void NextLevel();
+
+	UFUNCTION()
+	void CoinCollected();
 	
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "LevelData")
 	int _CurrentLevel = 0;
@@ -30,5 +33,5 @@ public:
 	ACubeGamemode* _CurrentGameMode;
 	
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "LevelData")
-	int _coinsCollected;
+	int _coinsCollected = 0;
 };

@@ -34,27 +34,24 @@ void UGameRule_Coins::BeginPlay()
 			Coin->OnCoinCollected.AddUniqueDynamic(this, &UGameRule_Coins::CoinCollected);
 		}
 	}
-
-	// ...
 	
 }
 
 void UGameRule_Coins::CoinCollected()
 {
 	_CoinsCollected++;
-
+	if (UKismetSystemLibrary::DoesImplementInterface(this->GetOwner(), UGameModeInterface::StaticClass()))
+	{
+		IGameModeInterface::Execute_CoinCollected(this->GetOwner());
+	}
 	if(_CoinsCollected >= _FoundCoins.Num())
 	{
-		//OnComplete.Broadcast();
-		UE_LOG(LogTemp, Warning, TEXT("AllCoinsCollected"));
 		if (UKismetSystemLibrary::DoesImplementInterface(this->GetOwner(), UGameModeInterface::StaticClass()))
 		{
 			IGameModeInterface::Execute_AllCoinsCollected(this->GetOwner());
-			
 		}
-		
-		
 	}
+
 }
 
 
