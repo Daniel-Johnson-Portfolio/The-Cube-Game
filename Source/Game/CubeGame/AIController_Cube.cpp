@@ -14,7 +14,7 @@
 AAIController_Cube::AAIController_Cube()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 ACubeBase* AAIController_Cube::newPawn_Implementation()

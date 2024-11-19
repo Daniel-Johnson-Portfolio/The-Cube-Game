@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "Puzzle_Stack.generated.h"
 
+class APlayerController_Cube;
+
 UCLASS(Abstract)
 class GAME_API APuzzle_Stack : public AActor
 {
@@ -35,7 +37,7 @@ protected:
 	UMaterial* _Material;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	APlayerController* _PlayerController;
+	APlayerController_Cube* _PlayerController;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<UBoxComponent> _OverlapBox;
@@ -61,6 +63,9 @@ protected:
 	void ComponentEntered(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	
 	void CheckForMovement();
+
+	UFUNCTION()
+	void CancelTimer();
 
 	UFUNCTION()
 	void Init();

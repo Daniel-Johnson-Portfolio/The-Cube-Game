@@ -50,13 +50,16 @@ APuzzle_Stack::APuzzle_Stack()
 void APuzzle_Stack::BeginPlay()
 {
 	Super::BeginPlay();
-	_PlayerController = GetWorld()->GetFirstPlayerController();
-
 	
-	if(UKismetSystemLibrary::DoesImplementInterface(_PlayerController, UPlayerControllerInterface::StaticClass()))
+	if(UKismetSystemLibrary::DoesImplementInterface(GetWorld()->GetFirstPlayerController(), UPlayerControllerInterface::StaticClass()))
 	{
-		Cast<APlayerController_Cube>(_PlayerController)->OnPlayerControllerReady.AddUniqueDynamic(this, &APuzzle_Stack::Init);
+		_PlayerController = IPlayerControllerInterface::Execute_GetPlayerController(GetWorld()->GetFirstPlayerController());
+		_PlayerController->OnPlayerControllerReady.AddUniqueDynamic(this, &APuzzle_Stack::Init);
+		_PlayerController->OnStacked.AddUniqueDynamic(this, &APuzzle_Stack::CancelTimer);
+		
 	}
+	
+	
 }
 
 
@@ -106,6 +109,11 @@ void APuzzle_Stack::CheckForMovement()
 	}
 	
 	IPlayerControllerInterface::Execute_CubesOnPlatform(_PlayerController, _CubesOverlapped);
+}
+
+void APuzzle_Stack::CancelTimer()
+{
+	GetWorld()->GetTimerManager().ClearTimer(MovementCheckTimer);
 }
 
 void APuzzle_Stack::Init()

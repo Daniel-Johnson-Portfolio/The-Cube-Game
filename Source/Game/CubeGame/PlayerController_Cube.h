@@ -86,6 +86,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	
 	void FindPlayerStart_Implementation();
 
 	virtual void AllCoinsCollected_Implementation() override;

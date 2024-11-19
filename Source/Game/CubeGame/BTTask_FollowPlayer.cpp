@@ -37,3 +37,4 @@ EBTNodeResult::Type UBTTask_FollowPlayer::ExecuteTask(UBehaviorTreeComponent& Ow
 	
 	return Super::ExecuteTask(OwnerComp, NodeMemory);
 }
+

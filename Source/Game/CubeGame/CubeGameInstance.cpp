@@ -34,6 +34,7 @@ void UCubeGameInstance::Init()
 void UCubeGameInstance::NextLevel()
 {
 	_CurrentLevel++;
+	UE_LOG(LogTemp, Warning, TEXT("Level Number %d"), _CurrentLevel);
 	IGameModeInterface::Execute_LoadNextLevel(_CurrentGameMode, _CurrentLevel);
 }
 

@@ -219,6 +219,8 @@ void APlayerController_Cube::BeginPlay()
 	OnPlayerControllerReady.Broadcast();
 }
 
+
+
 void APlayerController_Cube::FindPlayerStart_Implementation()
 {
 	if(_PlayerStarts.Num() == 0)

@@ -41,7 +41,11 @@ ACubeGamemode* ACubeGamemode::GetGameMode_Implementation()
 
 void ACubeGamemode::LoadLevelInternal(int LevelNum)
 {
-	UGameplayStatics::OpenLevel(this, Levels[LevelNum], true, FString());
+	if(Levels.Num() >= LevelNum)
+	{
+		UGameplayStatics::OpenLevel(this, Levels[LevelNum], true, FString());
+	}
+	
 }
 
 void ACubeGamemode::LoadNextLevel_Implementation(int LevelNum)
