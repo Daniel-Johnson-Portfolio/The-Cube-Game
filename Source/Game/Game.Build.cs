@@ -10,7 +10,7 @@ public class Game : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG", "AIModule" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "CADKernel", "CADKernel" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "CADKernel", "CADKernel", "Niagara"});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

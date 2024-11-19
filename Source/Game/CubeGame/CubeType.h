@@ -17,7 +17,7 @@ class GAME_API UCubeType : public UDataAsset
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UMaterial> _CubeMaterial;
+	TObjectPtr<UMaterialInstance> _CubeMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector _CubeSize = FVector(1.0f, 1.0f, 1.0f);

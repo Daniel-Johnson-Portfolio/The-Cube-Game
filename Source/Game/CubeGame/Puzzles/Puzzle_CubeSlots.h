@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "Game/CubeGame/PuzzleInterface.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
 #include "Puzzle_CubeSlots.generated.h"
 
 class UCubeSlots_Component;
@@ -35,6 +38,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Puzzle")
 	UCubeSlots_Component* _CubeSlotManager;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Puzzle")
+	UNiagaraSystem* _SlotVFX;
 
 protected:
 	// Called when the game starts or when spawned
