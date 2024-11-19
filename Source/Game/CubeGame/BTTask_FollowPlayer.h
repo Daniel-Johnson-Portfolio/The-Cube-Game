@@ -25,7 +25,7 @@ public:
 	ACubeBase* _CurrentPlayer;
 
 	UPROPERTY()
-	APawn* _AIPawn;
+	ACubeBase* _AIPawn;
 
 	UPROPERTY()
 	bool isPaused = false;

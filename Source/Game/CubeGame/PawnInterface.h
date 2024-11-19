@@ -11,6 +11,7 @@
 #include "PawnInterface.generated.h"
 
 
+class ACubeBase;
 class UCubeType;
 // This class does not need to be modified.
 UINTERFACE()
@@ -38,5 +39,13 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FName ReturnCubeType();
-	
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	ACubeBase* GetPawn();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FVector GetPawnLocation();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetPawnLocation(FVector location);
 };

@@ -76,6 +76,21 @@ void ACubeBase::Input_Move_Implementation(FVector2D Value)
 	
 }
 
+ACubeBase* ACubeBase::GetPawn_Implementation()
+{
+	return this;
+}
+
+FVector ACubeBase::GetPawnLocation_Implementation()
+{
+	return GetActorLocation();
+}
+
+void ACubeBase::SetPawnLocation_Implementation(FVector location)
+{
+	SetActorLocation(location);
+}
+
 
 void ACubeBase::Pawn_Init_Implementation(UCubeType* Type, FVector Location)
 {

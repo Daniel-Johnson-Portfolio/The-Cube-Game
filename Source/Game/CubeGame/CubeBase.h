@@ -58,8 +58,9 @@ public:
 	virtual void Input_JumpPressed_Implementation() override;
 	virtual void Input_Look_Implementation(FVector2D Value) override;
 	virtual void Input_Move_Implementation(FVector2D Value) override;
-	
-
+	virtual ACubeBase* GetPawn_Implementation() override;
+	virtual FVector GetPawnLocation_Implementation() override;
+	virtual void SetPawnLocation_Implementation(FVector location) override;
 	virtual void Pawn_Init_Implementation(UCubeType* Type, FVector Location) override;
 	
 
