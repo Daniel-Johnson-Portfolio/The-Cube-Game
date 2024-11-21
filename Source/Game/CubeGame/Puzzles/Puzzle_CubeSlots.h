@@ -42,6 +42,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Puzzle")
 	UNiagaraSystem* _SlotVFX;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Puzzle")
+	bool bVFXAdoptsColour = true;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

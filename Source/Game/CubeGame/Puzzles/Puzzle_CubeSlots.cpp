@@ -47,20 +47,13 @@ void APuzzle_CubeSlots::CubeEntered(UPrimitiveComponent* OverlappedComponent, AA
 		{
 			bValidActor = true;
 			OnValidActor.Broadcast(bValidActor);
-			UNiagaraComponent* NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-		   GetWorld(),
-		   _SlotVFX,
-		   GetActorLocation(),
-		   FRotator::ZeroRotator,  
-		   FVector(1.0f));
-		   
-		   FLinearColor BaseColor;
-		   if (_CubeType->_CubeMaterial->GetVectorParameterValue(FName("Colour"), BaseColor))
+			UNiagaraComponent* NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),_SlotVFX,GetActorLocation(),FRotator::ZeroRotator,FVector(1.0f));
+			FLinearColor BaseColor;
+			
+		   if (_CubeType->_CubeMaterial->GetVectorParameterValue(FName("Colour"), BaseColor) && bVFXAdoptsColour)
 		   {
-			   // Use this color to set the Niagara variable
-			   NiagaraComponent->SetVariableLinearColor(TEXT("Colour"), BaseColor);
+			   NiagaraComponent->SetVariableLinearColor(TEXT("Color"), BaseColor);
 		   }
-   
 		}
 	}
 }
