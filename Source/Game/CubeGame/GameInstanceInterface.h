@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "GameModeInterface.generated.h"
+#include "GameInstanceInterface.generated.h"
 
-class ACubeGamemode;
+class UCubeGameInstance;
 // This class does not need to be modified.
 UINTERFACE()
-class UGameModeInterface : public UInterface
+class UGameInstanceInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -17,20 +17,13 @@ class UGameModeInterface : public UInterface
 /**
  * 
  */
-class GAME_API IGameModeInterface
+class GAME_API IGameInstanceInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	ACubeGamemode* GetGameMode();
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void LoadNextLevel(int LevelNum);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void SetCoins(int Coins);
+	int getCoins();
 	
 };

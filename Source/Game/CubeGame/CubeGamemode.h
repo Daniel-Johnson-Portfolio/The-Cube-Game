@@ -4,13 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameModeInterface.h"
+#include "GameRuleBase.h"
 #include "GameFramework/GameMode.h"
 #include "CubeGamemode.generated.h"
 
+class UGameRule_Coins;
 class APlayerController_Cube;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEndOfLevelSignature);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCoinCollected);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNeedTotalCoinsSignature, int, coins);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGamemodeIsReadySignature);
 UCLASS(Abstract)
 class GAME_API ACubeGamemode : public AGameMode, public IGameModeInterface
 {
@@ -18,7 +20,11 @@ class GAME_API ACubeGamemode : public AGameMode, public IGameModeInterface
 
 public:
 
-	FCoinCollected OnCoinCollected;
+	UPROPERTY()
+	UGameRule_Coins* _CoinGameRule;
+
+	FGamemodeIsReadySignature OnGamemodeLoaded;
+	FNeedTotalCoinsSignature OnNeedCoins;
 	FEndOfLevelSignature OnLevelEnd;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Levels")
@@ -37,9 +43,11 @@ public:
 
 	virtual void SetCoins_Implementation(int Coins) override;
 
-	virtual void AllCoinsCollected_Implementation() override;
+	UFUNCTION()
+	void AllCoinsCollected();
 
-	virtual void CoinCollected_Implementation() override;
+	UFUNCTION()
+	void CoinCollected(int coinsInGameRule);
 
 	void LevelCompleted();
 

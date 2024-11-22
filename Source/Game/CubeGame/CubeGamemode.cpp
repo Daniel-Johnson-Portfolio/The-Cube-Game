@@ -3,6 +3,9 @@
 
 #include "CubeGamemode.h"
 
+#include "CubeGameInstance.h"
+#include "GameInstanceInterface.h"
+#include "GameRule_Coins.h"
 #include "PlayerControllerInterface.h"
 #include "PlayerController_Cube.h"
 #include "GameFramework/PlayerStart.h"
@@ -28,9 +31,16 @@ void ACubeGamemode::BeginPlay()
 	{
 		_PlayerController = IPlayerControllerInterface::Execute_GetPlayerController(GetWorld()->GetFirstPlayerController());
 		_PlayerController->OnStacked.AddUniqueDynamic(this, &ACubeGamemode::CubesStacked);
-		IPlayerControllerInterface::Execute_SetCoins(_PlayerController, _Coins);
+	}
+	
+	if(UKismetSystemLibrary::DoesImplementInterface(GetComponentByClass(UGameRule_Coins::StaticClass()), UCoinGameRuleInterface::StaticClass()))
+	{
+		_CoinGameRule = ICoinGameRuleInterface::Execute_GetGameRule(GetComponentByClass(UGameRule_Coins::StaticClass()));
+		_CoinGameRule->OnCoinCollected.AddUniqueDynamic(this, &ACubeGamemode::CoinCollected);
+		_CoinGameRule->OnComplete.AddUniqueDynamic(this, &ACubeGamemode::AllCoinsCollected);
 	}
 
+	OnGamemodeLoaded.Broadcast();
 	Super::BeginPlay();
 }
 
@@ -56,21 +66,20 @@ void ACubeGamemode::LoadNextLevel_Implementation(int LevelNum)
 
 void ACubeGamemode::SetCoins_Implementation(int Coins)
 {
-	_Coins = Coins;
+	IPlayerControllerInterface::Execute_SetCoins(_PlayerController, Coins);
 }
 
-void ACubeGamemode::AllCoinsCollected_Implementation()
+void ACubeGamemode::AllCoinsCollected()
 {
 	bHasCollectedAllCoins = true;
 	IPlayerControllerInterface::Execute_AllCoinsCollected(_PlayerController);
 }
 
-void ACubeGamemode::CoinCollected_Implementation()
+void ACubeGamemode::CoinCollected(int coinsInGameRule)
 {
-	_Coins++;
-	IPlayerControllerInterface::Execute_SetCoins(_PlayerController, _Coins);
-	OnCoinCollected.Broadcast();
+	OnNeedCoins.Broadcast(coinsInGameRule);
 }
+
 
 void ACubeGamemode::LevelCompleted()
 {
@@ -81,7 +90,6 @@ void ACubeGamemode::LevelCompleted()
 void ACubeGamemode::CubesStacked()
 {
 	bCubesAreStacked = true;
-	UE_LOG(LogTemp, Warning, TEXT("CUBES STACKED"));
 	if(bHasCollectedAllCoins && bCubesAreStacked)
 	{
 		LevelCompleted();

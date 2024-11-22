@@ -8,6 +8,12 @@
 #include "GameFramework/GameModeBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+int UCubeGameInstance::getCoins_Implementation()
+{
+	return _LevelcoinsCollected;
+}
+
+
 void UCubeGameInstance::OnPostLoadMap(const FActorsInitializedParams& Params)
 {
 	if (!GetWorld() || !GetWorld()->GetAuthGameMode())
@@ -18,28 +24,37 @@ void UCubeGameInstance::OnPostLoadMap(const FActorsInitializedParams& Params)
 	if (UKismetSystemLibrary::DoesImplementInterface(GetWorld()->GetAuthGameMode(), UGameModeInterface::StaticClass()))
 	{
 		_CurrentGameMode = IGameModeInterface::Execute_GetGameMode(GetWorld()->GetAuthGameMode());
-		IGameModeInterface::Execute_SetCoins(_CurrentGameMode, _coinsCollected);
 		_CurrentGameMode->OnLevelEnd.AddUniqueDynamic(this, &UCubeGameInstance::NextLevel);
-		_CurrentGameMode->OnCoinCollected.AddUniqueDynamic(this, &UCubeGameInstance::CoinCollected);
+		_CurrentGameMode->OnNeedCoins.AddUniqueDynamic(this, &UCubeGameInstance::CoinCollected);
+		_CurrentGameMode->OnGamemodeLoaded.AddUniqueDynamic(this, &UCubeGameInstance::setCoins);
 	}
 }
 
 void UCubeGameInstance::Init()
 {
 	Super::Init();
-	FWorldDelegates::OnWorldInitializedActors.AddUObject(this, &UCubeGameInstance::OnPostLoadMap);
 	
+	FWorldDelegates::OnWorldInitializedActors.AddUObject(this, &UCubeGameInstance::OnPostLoadMap);
 }
 
 void UCubeGameInstance::NextLevel()
 {
+	_GamecoinsCollected += _LevelcoinsCollected;
+	_LevelcoinsCollected = 0;
 	_CurrentLevel++;
 	UE_LOG(LogTemp, Warning, TEXT("Level Number %d"), _CurrentLevel);
 	IGameModeInterface::Execute_LoadNextLevel(_CurrentGameMode, _CurrentLevel);
 }
 
-void UCubeGameInstance::CoinCollected()
+void UCubeGameInstance::CoinCollected(int coins)
 {
-	_coinsCollected++;
-	UE_LOG(LogTemp, Warning, TEXT("Coins %d"), _coinsCollected);
+	_LevelcoinsCollected++;
+	UE_LOG(LogTemp, Warning, TEXT("Coins %d"), _GamecoinsCollected + coins);
+	IGameModeInterface::Execute_SetCoins(_CurrentGameMode, _GamecoinsCollected + coins);
 }
+
+void UCubeGameInstance::setCoins()
+{
+	IGameModeInterface::Execute_SetCoins(_CurrentGameMode, _GamecoinsCollected);
+}
+

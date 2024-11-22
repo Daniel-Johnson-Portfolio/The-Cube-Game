@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameInstanceInterface.h"
 #include "Engine/GameInstance.h"
 #include "CubeGameInstance.generated.h"
 
@@ -11,20 +12,25 @@ class ACubeGamemode;
  * 
  */
 UCLASS()
-class GAME_API UCubeGameInstance : public UGameInstance
+class GAME_API UCubeGameInstance : public UGameInstance, public IGameInstanceInterface
 {
 	GENERATED_BODY()
 
 public:
-	
+
+	virtual int getCoins_Implementation() override;
 	void OnPostLoadMap(const FActorsInitializedParams& Params);
+	
 	virtual void Init() override;
 
 	UFUNCTION()
 	void NextLevel();
 
 	UFUNCTION()
-	void CoinCollected();
+	void CoinCollected(int coin);
+	
+	UFUNCTION()
+	void setCoins();
 	
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "LevelData")
 	int _CurrentLevel = 0;
@@ -33,5 +39,9 @@ public:
 	ACubeGamemode* _CurrentGameMode;
 	
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "LevelData")
-	int _coinsCollected = 0;
+	int _GamecoinsCollected = 0;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "LevelData")
+	int _LevelcoinsCollected = 0;
+	
 };

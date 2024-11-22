@@ -290,9 +290,7 @@ void APlayerController_Cube::CubesOnPlatform_Implementation(int amount)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Duplicate values found in CharMap."));
 		}
-		
 	}
-	
 }
 
 APlayerController_Cube* APlayerController_Cube::GetPlayerController_Implementation()
@@ -307,7 +305,6 @@ void APlayerController_Cube::SetCoins_Implementation(int coins)
 	{
 		_HUDWidget->UpdateCoinsText(_CurrentCoins);
 	}
-	
 }
 
 

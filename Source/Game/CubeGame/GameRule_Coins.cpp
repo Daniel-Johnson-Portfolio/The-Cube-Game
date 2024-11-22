@@ -19,6 +19,11 @@ UGameRule_Coins::UGameRule_Coins()
 }
 
 
+UGameRule_Coins* UGameRule_Coins::GetGameRule_Implementation()
+{
+	return this;
+}
+
 // Called when the game starts
 void UGameRule_Coins::BeginPlay()
 {
@@ -40,20 +45,12 @@ void UGameRule_Coins::BeginPlay()
 void UGameRule_Coins::CoinCollected()
 {
 	_CoinsCollected++;
-	if (UKismetSystemLibrary::DoesImplementInterface(this->GetOwner(), UGameModeInterface::StaticClass()))
-	{
-		IGameModeInterface::Execute_CoinCollected(this->GetOwner());
-	}
+	OnCoinCollected.Broadcast(_CoinsCollected);
 	if(_CoinsCollected >= _FoundCoins.Num())
 	{
-		if (UKismetSystemLibrary::DoesImplementInterface(this->GetOwner(), UGameModeInterface::StaticClass()))
-		{
-			IGameModeInterface::Execute_AllCoinsCollected(this->GetOwner());
-		}
+		OnComplete.Broadcast();
 	}
-
 }
-
 
 // Called every frame
 void UGameRule_Coins::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
