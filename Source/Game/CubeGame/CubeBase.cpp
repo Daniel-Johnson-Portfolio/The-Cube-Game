@@ -4,7 +4,6 @@
 #include "CubeBase.h"
 #include "CubeType.h"
 #include "Camera/CameraComponent.h"
-#include "Kismet/GameplayStatics.h"
 // Sets default values
 ACubeBase::ACubeBase()
 {
@@ -46,7 +45,6 @@ void ACubeBase::Input_JumpPressed_Implementation()
 			bIsGrounded = false;
 		}
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle_JumpCooldown, this, &ACubeBase::ResetJumpCooldown, JumpCooldown, false);
-		//make cool down UI
 	}
 }
 
@@ -125,7 +123,7 @@ void ACubeBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ACubeBase::CheckIfGrounded()
 {
 	FVector Start = _StaticMesh->GetComponentLocation();
-	FVector End = Start - FVector(0, 0, 5); // Check downwards
+	FVector End = Start - FVector(0, 0, 5); //Check downwards
 	FRotator Rotation = FRotator(_StaticMesh->GetComponentRotation()); 
 	
 	FHitResult HitResult;
@@ -144,7 +142,6 @@ void ACubeBase::CheckIfGrounded()
 		bIsGrounded = false;
 	}
 	
-	DrawDebugBox(GetWorld(), HitResult.Location, _CubeExtents2D, BoxRotation, FColor::Green, false, 5, 0, 1);
 }
 
 void ACubeBase::ResetJumpCooldown()
@@ -180,7 +177,6 @@ FHitResult ACubeBase::DownwardTrace(FVector StartPos, FVector EndPos, FCollision
 			FCollisionShape::MakeBox(_CubeExtents2D),  
 			CollisionParams
 		);
-	DrawDebugBox(GetWorld(), HitResult.Location, _CubeExtents2D, BoxRotation, FColor::Green, false, 5, 0, 1);
 	return HitResult;
 }
 

@@ -30,12 +30,18 @@ APuzzle_CubeSlots* APuzzle_CubeSlots::GetCubeSlot_Implementation()
 	return this;
 }
 
+void APuzzle_CubeSlots::OnValidActorHook_Implementation(bool valid)
+{
+	//Designer hook
+}
+
 // Called when the game starts or when spawned
 void APuzzle_CubeSlots::BeginPlay()
 {
 	Super::BeginPlay();
 	_PlayerController = GetWorld()->GetFirstPlayerController();
 	_StaticMesh->SetMaterial(0, _CubeType->_CubeMaterial);
+	OnValidActor.AddUniqueDynamic(this, &APuzzle_CubeSlots::OnValidActorHook);
 	
 }
 

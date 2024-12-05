@@ -114,10 +114,7 @@ void APlayerController_Cube::BeginPlay()
 		_HUDWidget->UpdateCoinsText(_CurrentCoins);
 		_HUDWidget->DefaultHintText();
 	}
-	
-	if (APlayerController* PC = Cast<APlayerController>(this))
-	{
-		UEnhancedInputLocalPlayerSubsystem* InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
+		UEnhancedInputLocalPlayerSubsystem* InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(this->GetLocalPlayer());
 
 		if (InputSubsystem && _InputMapping)
 		{
@@ -127,7 +124,7 @@ void APlayerController_Cube::BeginPlay()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("InputSubsystem or _InputMapping is null in PlayerController_Cube"));
 		}
-	}
+	
 
 	FindPlayerStart_Implementation();
 	
@@ -281,14 +278,18 @@ void APlayerController_Cube::CubesOnPlatform_Implementation(int amount)
 			}
 		}
 		//check2
-		if (HasUniqueValues && _PossessedPawn->bCanJump == true)
+		for(ACubeBase* Char : _AllCharacterArray)
+		{
+			if(Char->bCanJump == false)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Duplicate values found in CharMap."));
+				return;
+			}
+		}
+		if(HasUniqueValues)
 		{
 			UE_LOG(LogTemp, Log, TEXT("All values are unique."));
 			OnStacked.Broadcast();
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Duplicate values found in CharMap."));
 		}
 	}
 }

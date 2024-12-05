@@ -2,7 +2,6 @@
 
 
 #include "CubeGameInstance.h"
-
 #include "CubeGamemode.h"
 #include "GameModeInterface.h"
 #include "GameFramework/GameModeBase.h"
@@ -42,6 +41,10 @@ void UCubeGameInstance::NextLevel()
 	_GamecoinsCollected += _LevelcoinsCollected;
 	_LevelcoinsCollected = 0;
 	_CurrentLevel++;
+	if(_CurrentLevel > _MaxLevel)
+	{
+		_CurrentLevel = 0;
+	}
 	UE_LOG(LogTemp, Warning, TEXT("Level Number %d"), _CurrentLevel);
 	IGameModeInterface::Execute_LoadNextLevel(_CurrentGameMode, _CurrentLevel);
 }

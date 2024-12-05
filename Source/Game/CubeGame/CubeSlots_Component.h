@@ -31,6 +31,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int _amountOfValidActors;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bhasAlreadyOpened = false;
+
 
 public:
 	// Called every frame

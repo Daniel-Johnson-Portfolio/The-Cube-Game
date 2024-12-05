@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameModeInterface.h"
-#include "GameRuleBase.h"
 #include "GameFramework/GameMode.h"
 #include "CubeGamemode.generated.h"
 

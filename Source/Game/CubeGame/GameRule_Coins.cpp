@@ -3,7 +3,6 @@
 
 #include "GameRule_Coins.h"
 
-#include "GameModeInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Puzzles/Puzzle_Coins.h"
 
@@ -11,11 +10,7 @@
 // Sets default values for this component's properties
 UGameRule_Coins::UGameRule_Coins()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-
-	// ...
 }
 
 
@@ -57,6 +52,5 @@ void UGameRule_Coins::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
 }
 

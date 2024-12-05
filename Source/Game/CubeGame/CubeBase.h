@@ -6,8 +6,6 @@
 #include "Inputs.h"
 #include "PawnInterface.h"
 #include "Camera/CameraComponent.h"
-#include "GameFramework/Character.h"
-#include "Components/BoxComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "CubeBase.generated.h"
 

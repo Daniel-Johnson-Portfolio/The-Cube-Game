@@ -15,7 +15,7 @@ class GAME_API UGameRuleBase : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
+
 	UGameRuleBase();
 	FGameRuleCompleteSignature OnComplete;
 	void BroadcastComplete();

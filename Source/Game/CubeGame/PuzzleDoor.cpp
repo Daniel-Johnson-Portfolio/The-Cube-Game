@@ -26,7 +26,6 @@ void APuzzleDoor::OpenDoor_Implementation()
 	if (!GetWorld()->GetTimerManager().IsTimerActive(MovementCheckTimer))
 	{
 		GetWorld()->GetTimerManager().SetTimer(MovementCheckTimer, this, &APuzzleDoor::DoorMovement, 0.01f, true);
-	
 	}
 	
 	
@@ -40,7 +39,6 @@ void APuzzleDoor::DoorMovement()
 	if(this->GetActorLocation().Z >= _DoorOpenHeight)
 	{
 		GetWorld()->GetTimerManager().ClearTimer(MovementCheckTimer);
-		UE_LOG(LogTemp, Log, TEXT("DoorStopped"));
 	}
 }
 

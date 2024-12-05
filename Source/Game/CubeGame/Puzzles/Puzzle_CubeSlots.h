@@ -45,6 +45,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Puzzle")
 	bool bVFXAdoptsColour = true;
 
+	UFUNCTION(BlueprintNativeEvent, DisplayName = "OnValidActor")
+	void OnValidActorHook(bool valid);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -20,7 +20,6 @@ class GAME_API UGameRule_Coins : public UGameRuleBase, public ICoinGameRuleInter
 
 public:
 	FCoinCollected OnCoinCollected;
-	// Sets default values for this component's properties
 	UGameRule_Coins();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<AActor*> _FoundCoins;

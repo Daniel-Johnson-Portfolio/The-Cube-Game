@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Game/CubeGame/CubeType.h"
@@ -18,7 +16,6 @@ class GAME_API APuzzle_Coins : public AActor, public IPuzzleInterface
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	APuzzle_Coins();
 
 	UPROPERTY(BlueprintAssignable)
@@ -34,6 +31,9 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="SetupActor")
 	UCubeType* _CoinType;
+
+	UFUNCTION(BlueprintNativeEvent, DisplayName= "OnCoinCollected")
+	void OnCoinCollectedHook();
 
 protected:
 	// Called when the game starts or when spawned

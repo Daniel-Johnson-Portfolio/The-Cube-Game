@@ -35,6 +35,9 @@ public:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "LevelData")
 	int _CurrentLevel = 0;
 
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "LevelData")
+	int _MaxLevel; //This number should be provided via the gamemodes levels array.num
+
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "LevelData")
 	ACubeGamemode* _CurrentGameMode;
 	

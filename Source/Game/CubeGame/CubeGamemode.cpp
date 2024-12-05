@@ -3,12 +3,9 @@
 
 #include "CubeGamemode.h"
 
-#include "CubeGameInstance.h"
-#include "GameInstanceInterface.h"
 #include "GameRule_Coins.h"
 #include "PlayerControllerInterface.h"
 #include "PlayerController_Cube.h"
-#include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 
 
